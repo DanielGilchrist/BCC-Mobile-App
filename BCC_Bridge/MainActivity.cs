@@ -13,6 +13,7 @@ namespace BCC_Bridge
 
 			// Set our view from the "main" layout resource
 			// SetContentView (Resource.Layout.YourMainView);
+            //test commit - Louis
 		}
 	}
 }
