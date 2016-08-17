@@ -1,6 +1,7 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCC_Bridge", "BCC_Bridge.csproj", "{516BD2FA-3EB4-4EDB-A6A0-C146E6CCEDBA}"
 EndProject
 Global
@@ -11,7 +12,11 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{516BD2FA-3EB4-4EDB-A6A0-C146E6CCEDBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{516BD2FA-3EB4-4EDB-A6A0-C146E6CCEDBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{516BD2FA-3EB4-4EDB-A6A0-C146E6CCEDBA}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{516BD2FA-3EB4-4EDB-A6A0-C146E6CCEDBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{516BD2FA-3EB4-4EDB-A6A0-C146E6CCEDBA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
