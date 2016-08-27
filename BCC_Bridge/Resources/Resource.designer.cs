@@ -337,6 +337,9 @@ namespace BCC_Bridge
 			// aapt resource value: 0x7f07000a
 			public const int auto = 2131165194;
 			
+			// aapt resource value: 0x7f07000e
+			public const int btnSwitch = 2131165198;
+			
 			// aapt resource value: 0x7f07000d
 			public const int button1 = 2131165197;
 			
@@ -351,6 +354,9 @@ namespace BCC_Bridge
 			
 			// aapt resource value: 0x7f07000c
 			public const int light = 2131165196;
+			
+			// aapt resource value: 0x7f07000f
+			public const int map = 2131165199;
 			
 			// aapt resource value: 0x7f070001
 			public const int none = 2131165185;
@@ -401,6 +407,9 @@ namespace BCC_Bridge
 			
 			// aapt resource value: 0x7f030000
 			public const int main = 2130903040;
+			
+			// aapt resource value: 0x7f030001
+			public const int Map = 2130903041;
 			
 			static Layout()
 			{
@@ -510,6 +519,9 @@ namespace BCC_Bridge
 			
 			// aapt resource value: 0x7f04001e
 			public const int common_signin_button_text_long = 2130968606;
+			
+			// aapt resource value: 0x7f040020
+			public const int google_maps_key = 2130968608;
 			
 			static String()
 			{
