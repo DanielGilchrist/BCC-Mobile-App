@@ -337,11 +337,11 @@ namespace BCC_Bridge
 			// aapt resource value: 0x7f07000a
 			public const int auto = 2131165194;
 			
+			// aapt resource value: 0x7f07000d
+			public const int btnMap = 2131165197;
+			
 			// aapt resource value: 0x7f07000e
 			public const int btnSwitch = 2131165198;
-			
-			// aapt resource value: 0x7f07000d
-			public const int button1 = 2131165197;
 			
 			// aapt resource value: 0x7f07000b
 			public const int dark = 2131165195;
