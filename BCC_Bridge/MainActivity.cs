@@ -11,20 +11,8 @@ namespace BCC_Bridge
 		{
 			base.OnCreate(savedInstanceState);
 
-            // Set our view from the "main" layout resource
-            // SetContentView (Resource.Layout.YourMainView);
-
-
-            var button = FindViewById<Button>(Resource.Id.button1);
-
-            button.Click += delegate {
-                var alert = new AlertDialog.Builder(this);
-                alert.SetTitle("Yea boi");
-                alert.SetMessage("ffgdgggd");
-
-                var dialog = alert.Create();
-                dialog.Show();
-            };
+			// Set our view from the "main" layout resource
+			// SetContentView (Resource.Layout.YourMainView);
 		}
 	}
 }
