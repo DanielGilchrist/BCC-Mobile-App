@@ -52,11 +52,9 @@ namespace BCC_Bridge
 
         private void SetCameraFromCoords(ref GoogleMap map, double latitude, double longitude)
         {
-            var location = new LatLng(latitude, longitude);
-            var camBuilder = new CameraPosition.Builder();
-
-            camBuilder.Target(location);
-            camBuilder.Zoom(16);
+            var camBuilder = new CameraPosition.Builder()
+                .Target(new LatLng(latitude, longitude))
+                .Zoom(16);
 
             var camPos = camBuilder.Build();
             var camUpdate = CameraUpdateFactory.NewCameraPosition(camPos);
