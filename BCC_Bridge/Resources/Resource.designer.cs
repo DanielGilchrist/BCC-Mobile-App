@@ -341,7 +341,13 @@ namespace BCC_Bridge
 			public const int btnMap = 2131165197;
 			
 			// aapt resource value: 0x7f07000e
-			public const int btnSwitch = 2131165198;
+			public const int btnMenu = 2131165198;
+			
+			// aapt resource value: 0x7f07000f
+			public const int btnSwitch = 2131165199;
+			
+			// aapt resource value: 0x7f070011
+			public const int btnTest = 2131165201;
 			
 			// aapt resource value: 0x7f07000b
 			public const int dark = 2131165195;
@@ -355,8 +361,8 @@ namespace BCC_Bridge
 			// aapt resource value: 0x7f07000c
 			public const int light = 2131165196;
 			
-			// aapt resource value: 0x7f07000f
-			public const int map = 2131165199;
+			// aapt resource value: 0x7f070010
+			public const int map = 2131165200;
 			
 			// aapt resource value: 0x7f070001
 			public const int none = 2131165185;

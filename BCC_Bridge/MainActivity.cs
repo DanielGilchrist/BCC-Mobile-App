@@ -16,6 +16,9 @@ namespace BCC_Bridge
 
             var mapButton = FindViewById<Button>(Resource.Id.btnMap);
             mapButton.Click += delegate { StartActivity(typeof(MapActivity)); };
+
+			var menuButton = FindViewById<Button>(Resource.Id.btnMenu);
+			menuButton.Click += delegate { StartActivity(typeof(MenuActivity)); };
 		}
 	}
 }
