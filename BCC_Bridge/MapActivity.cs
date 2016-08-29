@@ -6,6 +6,9 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using Android.Gms.Maps;
+using Android.Gms.Maps.Model;
+using Android.Locations;
+using System.Threading;
 
 namespace BCC_Bridge
 {
@@ -47,9 +50,33 @@ namespace BCC_Bridge
             }
         }
 
+        private void SetCameraFromCoords(ref GoogleMap map, double latitude, double longitude)
+        {
+            var location = new LatLng(latitude, longitude);
+            var camBuilder = new CameraPosition.Builder();
+
+            camBuilder.Target(location);
+            camBuilder.Zoom(16);
+
+            var camPos = camBuilder.Build();
+            var camUpdate = CameraUpdateFactory.NewCameraPosition(camPos);
+
+            map.MoveCamera(camUpdate);
+        }
+
+        private void SetCameraFromName(ref GoogleMap map, string name)
+        {
+            var geo = new Geocoder(this);
+            var coords = geo.GetFromLocationName(name, 1);
+
+            SetCameraFromCoords(ref map, coords[0].Latitude, coords[0].Longitude);
+        }
+
         public void OnMapReady(GoogleMap googleMap)
         {
             gMap = googleMap;
+
+            SetCameraFromName(ref gMap, "Queensland University of Technology");
         }
     }
 }
