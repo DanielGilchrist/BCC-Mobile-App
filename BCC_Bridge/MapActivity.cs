@@ -67,9 +67,14 @@ namespace BCC_Bridge
         private void SetCameraFromName(ref GoogleMap map, string name)
         {
             var geo = new Geocoder(this);
-            var coords = geo.GetFromLocationName(name, 1);
 
-            SetCameraFromCoords(ref map, coords[0].Latitude, coords[0].Longitude);
+            // hacky solution to GetFromLocationName() timeout bug
+            try
+            {
+                var coords = geo.GetFromLocationName(name, 1);
+                SetCameraFromCoords(ref map, coords[0].Latitude, coords[0].Longitude);
+            } 
+            catch{ /* don't do anything fam */ }
         }
 
         public void OnMapReady(GoogleMap googleMap)
