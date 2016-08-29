@@ -66,7 +66,7 @@ namespace BCC_Bridge
 
         private void SetCameraFromName(ref GoogleMap map, string name)
         {
-            // hacky solution to GetFromLocationName() timeout bug
+            // hacky (hopefully) temporary solution for GetFromLocationName() timeout bug
             try
             {
                 var geo = new Geocoder(this);
