@@ -15,8 +15,8 @@ namespace BCC_Bridge
 {
 	[Activity(Label = "MenuActivity")]
 	public class MenuActivity : Activity
-
 	{
+
 		private Button testBtn;
 
 		protected override void OnCreate(Bundle savedInstanceState)
@@ -30,9 +30,7 @@ namespace BCC_Bridge
 		}
 		void testBtn_Click(object sender, EventArgs e)
 		{
-			int count = 0;
-			count++;
-			testBtn.Text(count);
+			testBtn.Text = "Clicked!";
 		}
 	}
 }
