@@ -17,17 +17,22 @@ namespace BCC_Bridge
 	[Activity(Label = "Menu")]
 	public class MenuActivity : Activity
 	{
+<<<<<<< HEAD
 		private DrawerLayout m_Drawer;
 		private ListView m_DrawerList;
 		private static readonly string[] Sections = new[]
 		{
 			"Browse", "Friends", "Profile"
 		};
+=======
+		private Button testBtn;
+>>>>>>> 75c45ca68a22809eb47b721395420307d9c2593a
 
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
 			base.OnCreate(savedInstanceState);
 
+<<<<<<< HEAD
 			SetContentView(Resource.Layout.Menu);
 
 			this.m_Title = this.m_DrawerTitle = this.Title;
@@ -64,6 +69,12 @@ namespace BCC_Bridge
 
 			this.ActionBar.SetDisplayHomeAsUpEnabled(true);
 			this.ActionBar.SetHomeButtonEnabled(true);
+=======
+            SetContentView(Resource.Layout.Menu); 
+
+			testBtn = FindViewById<Button>(Resource.Id.btnTest);
+			testBtn.Click += testBtn_Click;
+>>>>>>> 75c45ca68a22809eb47b721395420307d9c2593a
 		}
 
 		protected override void OnPostCreate(Bundle savedInstanceState)
