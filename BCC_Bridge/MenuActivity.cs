@@ -15,7 +15,7 @@ using SupportToolbar = Android.Support.V7.Widget.Toolbar;
 
 namespace BCC_Bridge
 {
-	[Activity(Label = "MenuActivity", Icon = "@drawable/icon", Theme="@style/MyTheme")]
+	[Activity(Label = "MenuActivity", Theme="@style/MyTheme")]
 	public class MenuActivity : ActionBarActivity
 
 	{
@@ -29,7 +29,7 @@ namespace BCC_Bridge
 
 			mToolbar = FindViewById<SupportToolbar>(Resource.Id.toolbar);
 			SetSupportActionBar(mToolbar);
-			// Create your application here
+
 		}
 	}
 }
