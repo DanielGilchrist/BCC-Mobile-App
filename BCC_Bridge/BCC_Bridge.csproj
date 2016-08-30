@@ -83,7 +83,6 @@
     <AndroidResource Include="Resources\layout\Menu.axml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resources\drawable\" />
     <Folder Include="Resources\mipmap-hdpi\" />
     <Folder Include="Resources\mipmap-mdpi\" />
     <Folder Include="Resources\mipmap-xhdpi\" />
@@ -100,6 +99,9 @@
       <Visible>False</Visible>
       <Version>29.0.0.2</Version>
     </XamarinComponentReference>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\MapStyles.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="packages\Xamarin.GooglePlayServices.Basement.29.0.0.2\build\Xamarin.GooglePlayServices.Basement.targets" Condition="Exists('packages\Xamarin.GooglePlayServices.Basement.29.0.0.2\build\Xamarin.GooglePlayServices.Basement.targets')" />
