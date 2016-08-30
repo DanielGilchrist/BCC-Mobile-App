@@ -12,7 +12,7 @@ namespace BCC_Bridge
 			base.OnCreate(savedInstanceState);
 
 			// Set our view from the "Main" layout resource
-			SetContentView (Resource.Layout.Main);
+			SetContentView (Resource.Layout.main);
 
             var mapButton = FindViewById<Button>(Resource.Id.btnMap);
             mapButton.Click += delegate { StartActivity(typeof(MapActivity)); };

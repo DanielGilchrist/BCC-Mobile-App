@@ -9,13 +9,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-<<<<<<< HEAD
-using Android.Graphics.Drawables;
-
-[assembly: Android.Runtime.ResourceDesignerAttribute("BCC_Bridge.Resource", IsApplication=true)]
-=======
 [assembly: global::Android.Runtime.ResourceDesignerAttribute("BCC_Bridge.Resource", IsApplication=true)]
->>>>>>> 75c45ca68a22809eb47b721395420307d9c2593a
 
 namespace BCC_Bridge
 {
@@ -320,9 +314,7 @@ namespace BCC_Bridge
 			
 			// aapt resource value: 0x7f020029
 			public const int common_plus_signin_btn_text_light_pressed = 2130837545;
-			internal static Android.Graphics.Drawables.Drawable icon_hamburger;
-			internal static Android.Graphics.Drawables.Drawable ic_menu_white_24dp;
-
+			
 			static Drawable()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
@@ -389,9 +381,7 @@ namespace BCC_Bridge
 			
 			// aapt resource value: 0x7f070009
 			public const int wide = 2131165193;
-			internal static int drawer_layout;
-			internal static int toolbar;
-
+			
 			static Id()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
@@ -422,7 +412,7 @@ namespace BCC_Bridge
 		{
 			
 			// aapt resource value: 0x7f030000
-			public const int Main = 2130903040;
+			public const int main = 2130903040;
 			
 			// aapt resource value: 0x7f030001
 			public const int Map = 2130903041;
