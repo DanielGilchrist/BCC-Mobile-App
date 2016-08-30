@@ -315,6 +315,9 @@ namespace BCC_Bridge
 			// aapt resource value: 0x7f020029
 			public const int common_plus_signin_btn_text_light_pressed = 2130837545;
 			
+			// aapt resource value: 0x7f02002a
+			public const int MapStyles = 2130837546;
+			
 			static Drawable()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
@@ -327,6 +330,9 @@ namespace BCC_Bridge
 		
 		public partial class Id
 		{
+			
+			// aapt resource value: 0x7f070010
+			public const int addressInput = 2131165200;
 			
 			// aapt resource value: 0x7f070005
 			public const int adjust_height = 2131165189;
@@ -343,9 +349,6 @@ namespace BCC_Bridge
 			// aapt resource value: 0x7f07000e
 			public const int btnMenu = 2131165198;
 			
-			// aapt resource value: 0x7f07000f
-			public const int btnSwitch = 2131165199;
-			
 			// aapt resource value: 0x7f070011
 			public const int btnTest = 2131165201;
 			
@@ -361,8 +364,8 @@ namespace BCC_Bridge
 			// aapt resource value: 0x7f07000c
 			public const int light = 2131165196;
 			
-			// aapt resource value: 0x7f070010
-			public const int map = 2131165200;
+			// aapt resource value: 0x7f07000f
+			public const int map = 2131165199;
 			
 			// aapt resource value: 0x7f070001
 			public const int none = 2131165185;

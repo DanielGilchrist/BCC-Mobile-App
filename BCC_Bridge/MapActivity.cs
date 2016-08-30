@@ -9,6 +9,7 @@ using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
 using Android.Locations;
 using System.Collections.Generic;
+using Android.Graphics;
 
 namespace BCC_Bridge
 {
@@ -18,6 +19,7 @@ namespace BCC_Bridge
         GoogleMap gMap;
         private int mapIndex = 1;
         private Button switchBtn;
+        private EditText address;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -26,10 +28,22 @@ namespace BCC_Bridge
             // Create your application here
             SetContentView(Resource.Layout.Map);
 
-            switchBtn = FindViewById<Button>(Resource.Id.btnSwitch);
-            switchBtn.Click += SwitchBtn_Click;
+            //switchBtn = FindViewById<Button>(Resource.Id.btnSwitch);
+            //switchBtn.Click += SwitchBtn_Click;
+
+            address = FindViewById<EditText>(Resource.Id.addressInput);
+            address.SetTextColor(Color.ParseColor("#474342"));
+            address.SetHintTextColor(Color.ParseColor("#a99c98"));
+
+            address.EditorAction += Address_EditorAction;
 
             SetUpMap();
+        }
+
+        private void Address_EditorAction(object sender, EventArgs e)
+        {
+            SetCameraFromName(ref gMap, address.Text);
+            
         }
 
         private void SwitchBtn_Click(object sender, EventArgs e)
@@ -72,16 +86,18 @@ namespace BCC_Bridge
                 double latitude = coords[0].Latitude, longitude = coords[0].Longitude;
 
                 SetCameraFromCoords(ref map, latitude, longitude);
-                SetMarker(ref map, name, latitude, longitude);
+                SetMarker(ref map, name, latitude, longitude, true);
             } 
             catch { /* don't do anything fam */ }
         }
 
-        private void SetMarker(ref GoogleMap map, string title, double latitude, double longitude)
+        private void SetMarker(ref GoogleMap map, string title, double latitude, double longitude, bool moveable)
         {
             var marker = new MarkerOptions()
                 .SetPosition(new LatLng(latitude, longitude))
                 .SetTitle(title);
+
+            marker.Draggable(moveable);
 
             map.AddMarker(marker);
         }
