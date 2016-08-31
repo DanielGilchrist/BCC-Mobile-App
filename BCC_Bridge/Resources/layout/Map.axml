@@ -9,33 +9,48 @@
         android:layout_height="match_parent"
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_marginBottom="0.0dp">
-      
-        <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-
-        android:orientation="horizontal">
-
-          <EditText
-            android:id="@+id/addressInput"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="15dp"
-            android:layout_centerVertical="true"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:gravity="center"
-            android:ellipsize="start"
-            android:hint="Enter Location"
-            android:inputType="textPostalAddress"
-            android:background="@drawable/MapStyles" />
-      </LinearLayout>
-    <!--<Button
-            android:text="Switch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnSwitch" />-->
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_margin="5dp">
+            <EditText
+                android:id="@+id/addressInput"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentTop="true"
+                android:gravity="center"
+                android:ellipsize="start"
+                android:hint="Enter Location"
+                android:inputType="textPostalAddress"
+                android:background="@drawable/MapStyles" />
+            <EditText
+                android:id="@+id/vehicleInput"
+                android:layout_marginLeft="150dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="20dp"
+                android:layout_centerVertical="true"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:gravity="center"
+                android:ellipsize="start"
+                android:hint="Vehicle Height (cm)"
+                android:inputType="text"
+                android:background="@drawable/MapStyles" />
+            <Button
+                android:id="@+id/btnSwitch"
+                android:text="Switch"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true" />
+        </RelativeLayout>
     </fragment>
 </LinearLayout>

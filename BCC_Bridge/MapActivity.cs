@@ -19,7 +19,9 @@ namespace BCC_Bridge
         GoogleMap gMap;
         private int mapIndex = 1;
         private Button switchBtn;
-        private EditText address;
+        private EditText addressInput;
+        private EditText vInput;
+        private Marker marker = null;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -28,21 +30,26 @@ namespace BCC_Bridge
             // Create your application here
             SetContentView(Resource.Layout.Map);
 
-            //switchBtn = FindViewById<Button>(Resource.Id.btnSwitch);
-            //switchBtn.Click += SwitchBtn_Click;
+            string textColor = "#474342", hintColor = "#a99c98";
 
-            address = FindViewById<EditText>(Resource.Id.addressInput);
-            address.SetTextColor(Color.ParseColor("#474342"));
-            address.SetHintTextColor(Color.ParseColor("#a99c98"));
+            switchBtn = FindViewById<Button>(Resource.Id.btnSwitch);
+            switchBtn.Click += SwitchBtn_Click;
 
-            address.EditorAction += Address_EditorAction;
+            addressInput = FindViewById<EditText>(Resource.Id.addressInput);
+            addressInput.SetTextColor(Color.ParseColor(textColor));
+            addressInput.SetHintTextColor(Color.ParseColor(hintColor));
+            addressInput.EditorAction += Address_EditorAction;
+
+            vInput = FindViewById<EditText>(Resource.Id.vehicleInput);
+            vInput.SetTextColor(Color.ParseColor(textColor));
+            vInput.SetHintTextColor(Color.ParseColor(hintColor));
 
             SetUpMap();
         }
 
         private void Address_EditorAction(object sender, EventArgs e)
         {
-            SetCameraFromName(ref gMap, address.Text);
+            SetCameraFromName(gMap, addressInput.Text);
             
         }
 
@@ -64,7 +71,7 @@ namespace BCC_Bridge
             }
         }
 
-        private void SetCameraFromCoords(ref GoogleMap map, double latitude, double longitude)
+        private void SetCameraFromCoords(GoogleMap map, double latitude, double longitude)
         {
             var camBuilder = new CameraPosition.Builder()
                 .Target(new LatLng(latitude, longitude))
@@ -76,7 +83,7 @@ namespace BCC_Bridge
             map.MoveCamera(camUpdate);
         }
 
-        private void SetCameraFromName(ref GoogleMap map, string name)
+        private void SetCameraFromName(GoogleMap map, string name)
         {
             // hacky (hopefully) temporary solution for GetFromLocationName() timeout bug
             try
@@ -85,28 +92,33 @@ namespace BCC_Bridge
                 var coords = geo.GetFromLocationName(name, 1);
                 double latitude = coords[0].Latitude, longitude = coords[0].Longitude;
 
-                SetCameraFromCoords(ref map, latitude, longitude);
-                SetMarker(ref map, name, latitude, longitude, true);
+                SetCameraFromCoords(map, latitude, longitude);
+                SetMarker(map, name, latitude, longitude, true);
             } 
             catch { /* don't do anything fam */ }
         }
 
-        private void SetMarker(ref GoogleMap map, string title, double latitude, double longitude, bool moveable)
+        private void SetMarker(GoogleMap map, string title, double latitude, double longitude, bool moveable)
         {
-            var marker = new MarkerOptions()
+            var markerOptions = new MarkerOptions()
                 .SetPosition(new LatLng(latitude, longitude))
-                .SetTitle(title);
+                .SetTitle(title)
+                .Draggable(moveable);
 
-            marker.Draggable(moveable);
+            marker = map.AddMarker(markerOptions);
 
-            map.AddMarker(marker);
+            if (marker != null)
+            {
+                marker.Remove();
+                marker = null;
+            }
         }
 
         public void OnMapReady(GoogleMap googleMap)
         {
             gMap = googleMap;
 
-            SetCameraFromName(ref gMap, "Queensland University of Technology");
+            SetCameraFromName(gMap, "Queensland University of Technology");
         }
     }
 }

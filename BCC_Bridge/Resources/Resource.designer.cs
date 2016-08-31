@@ -349,8 +349,11 @@ namespace BCC_Bridge
 			// aapt resource value: 0x7f07000e
 			public const int btnMenu = 2131165198;
 			
-			// aapt resource value: 0x7f070011
-			public const int btnTest = 2131165201;
+			// aapt resource value: 0x7f070012
+			public const int btnSwitch = 2131165202;
+			
+			// aapt resource value: 0x7f070013
+			public const int btnTest = 2131165203;
 			
 			// aapt resource value: 0x7f07000b
 			public const int dark = 2131165195;
@@ -381,6 +384,9 @@ namespace BCC_Bridge
 			
 			// aapt resource value: 0x7f070004
 			public const int terrain = 2131165188;
+			
+			// aapt resource value: 0x7f070011
+			public const int vehicleInput = 2131165201;
 			
 			// aapt resource value: 0x7f070009
 			public const int wide = 2131165193;
