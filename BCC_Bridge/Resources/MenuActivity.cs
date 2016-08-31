@@ -23,6 +23,8 @@ namespace BCC_Bridge
 		private MyActionBarDrawerToggle mDrawerToggle;
 		private DrawerLayout mDrawerLayout;
 		private ListView mLeftDrawer;
+		private ArrayAdapter mLeftAdapter;
+		private List<string> mLeftDataSet;
 
 		protected override void OnCreate(Bundle bundle)
 		{
@@ -33,6 +35,16 @@ namespace BCC_Bridge
 			mToolbar = FindViewById<SupportToolbar>(Resource.Id.toolbar);
 			mDrawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
 			mLeftDrawer = FindViewById<ListView>(Resource.Id.left_drawer);
+
+			mLeftDataSet = new List<string>();
+			mLeftDataSet.Add("Help / About");
+			mLeftDataSet.Add("Beacon");
+			mLeftDataSet.Add("Alerts");
+			mLeftDataSet.Add("Sounds");
+			mLeftDataSet.Add("Background Idle");
+			mLeftAdapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, mLeftDataSet);
+			mLeftDrawer.Adapter = mLeftAdapter;
+
 
 			SetSupportActionBar(mToolbar);
 
@@ -85,6 +97,12 @@ namespace BCC_Bridge
 			}
 
 			base.OnSaveInstanceState(outState);
+		}
+
+		protected override void OnPostCreate(Bundle savedInstanceState)
+		{
+			base.OnPostCreate(savedInstanceState);
+			mDrawerToggle.SyncState();
 		}
 	}
 }
