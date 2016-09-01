@@ -45,7 +45,6 @@ namespace BCC_Bridge
 			mLeftAdapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, mLeftDataSet);
 			mLeftDrawer.Adapter = mLeftAdapter;
 
-
 			SetSupportActionBar(mToolbar);
 
 			mDrawerToggle = new MyActionBarDrawerToggle(
