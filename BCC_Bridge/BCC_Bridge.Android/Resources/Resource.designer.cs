@@ -125,7 +125,13 @@ namespace BCC_Bridge.Android
 			public const int FirstView = 2130968576;
 			
 			// aapt resource value: 0x7f040001
-			public const int SplashScreen = 2130968577;
+			public const int ListItem_Vehicle = 2130968577;
+			
+			// aapt resource value: 0x7f040002
+			public const int SplashScreen = 2130968578;
+			
+			// aapt resource value: 0x7f040003
+			public const int VehicleListView = 2130968579;
 			
 			static Layout()
 			{
