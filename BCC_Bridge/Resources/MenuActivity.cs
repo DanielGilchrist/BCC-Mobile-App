@@ -37,6 +37,7 @@ namespace BCC_Bridge
 			mLeftDrawer = FindViewById<ListView>(Resource.Id.left_drawer);
 
 			mLeftDataSet = new List<string>();
+			mLeftDataSet.Add("");
 			mLeftDataSet.Add("Help / About");
 			mLeftDataSet.Add("Beacon");
 			mLeftDataSet.Add("Alerts");
