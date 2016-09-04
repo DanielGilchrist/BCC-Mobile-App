@@ -1696,16 +1696,19 @@ namespace BCC_Bridge
 			public const int common_plus_signin_btn_text_light_pressed = 2130837620;
 			
 			// aapt resource value: 0x7f020075
-			public const int layers = 2130837621;
+			public const int icon = 2130837621;
 			
 			// aapt resource value: 0x7f020076
-			public const int location = 2130837622;
+			public const int layers = 2130837622;
 			
 			// aapt resource value: 0x7f020077
-			public const int MapStyles = 2130837623;
+			public const int location = 2130837623;
 			
 			// aapt resource value: 0x7f020078
-			public const int notification_template_icon_bg = 2130837624;
+			public const int MapStyles = 2130837624;
+			
+			// aapt resource value: 0x7f020079
+			public const int notification_template_icon_bg = 2130837625;
 			
 			static Drawable()
 			{
