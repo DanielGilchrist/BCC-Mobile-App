@@ -10,6 +10,7 @@ using Android.Gms.Maps.Model;
 using Android.Locations;
 using System.Collections.Generic;
 using Android.Graphics;
+using Android.Views.InputMethods;
 
 namespace BCC_Bridge
 {
@@ -22,6 +23,12 @@ namespace BCC_Bridge
         private EditText addressInput;
         private EditText vInput;
         private Marker marker = null;
+
+        enum MarkerType {
+            Normal = 1,
+            Good = 2,
+            Bad = 3
+        }
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -50,7 +57,8 @@ namespace BCC_Bridge
         private void Address_EditorAction(object sender, EventArgs e)
         {
             SetCameraFromName(gMap, addressInput.Text);
-            
+
+            HideKeyboard(addressInput);
         }
 
         private void SwitchBtn_Click(object sender, EventArgs e)
@@ -61,6 +69,12 @@ namespace BCC_Bridge
                 mapIndex = 1;
             }
             gMap.MapType = mapIndex;
+        }
+
+        private void HideKeyboard(EditText editText)
+        {
+            InputMethodManager imm = (InputMethodManager)GetSystemService(InputMethodService);
+            imm.HideSoftInputFromWindow(editText.WindowToken, 0);
         }
 
         private void SetUpMap()
@@ -80,12 +94,11 @@ namespace BCC_Bridge
             var camPos = camBuilder.Build();
             var camUpdate = CameraUpdateFactory.NewCameraPosition(camPos);
 
-            map.MoveCamera(camUpdate);
+            map.AnimateCamera(camUpdate);
         }
 
         private void SetCameraFromName(GoogleMap map, string name)
         {
-            // hacky (hopefully) temporary solution for GetFromLocationName() timeout bug
             try
             {
                 var geo = new Geocoder(this);
@@ -93,25 +106,31 @@ namespace BCC_Bridge
                 double latitude = coords[0].Latitude, longitude = coords[0].Longitude;
 
                 SetCameraFromCoords(map, latitude, longitude);
-                SetMarker(map, name, latitude, longitude, true);
+                SetMarker(map, MarkerType.Normal, name, latitude, longitude, true);
             } 
-            catch { /* don't do anything fam */ }
+            catch
+            {
+                Toast.MakeText(this, "Invalid Location", ToastLength.Short).Show();
+            }
         }
 
-        private void SetMarker(GoogleMap map, string title, double latitude, double longitude, bool moveable)
+        private void SetMarker(GoogleMap map, MarkerType mt, string title, double latitude, double longitude, bool moveable)
         {
             var markerOptions = new MarkerOptions()
                 .SetPosition(new LatLng(latitude, longitude))
                 .SetTitle(title)
                 .Draggable(moveable);
 
-            marker = map.AddMarker(markerOptions);
-
-            if (marker != null)
+            if (mt == MarkerType.Good)
             {
-                marker.Remove();
-                marker = null;
+                // markerOptions.SetIcon("good_marker");
+            } 
+            else if (mt == MarkerType.Bad)
+            {
+                // markerOptions.SetIcon("bad_marker");
             }
+
+            marker = map.AddMarker(markerOptions);
         }
 
         public void OnMapReady(GoogleMap googleMap)

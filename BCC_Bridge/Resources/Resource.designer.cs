@@ -316,7 +316,13 @@ namespace BCC_Bridge
 			public const int common_plus_signin_btn_text_light_pressed = 2130837545;
 			
 			// aapt resource value: 0x7f02002a
-			public const int MapStyles = 2130837546;
+			public const int layers = 2130837546;
+			
+			// aapt resource value: 0x7f02002b
+			public const int location = 2130837547;
+			
+			// aapt resource value: 0x7f02002c
+			public const int MapStyles = 2130837548;
 			
 			static Drawable()
 			{
@@ -343,17 +349,20 @@ namespace BCC_Bridge
 			// aapt resource value: 0x7f07000a
 			public const int auto = 2131165194;
 			
+			// aapt resource value: 0x7f070012
+			public const int btnLocation = 2131165202;
+			
 			// aapt resource value: 0x7f07000d
 			public const int btnMap = 2131165197;
 			
 			// aapt resource value: 0x7f07000e
 			public const int btnMenu = 2131165198;
 			
-			// aapt resource value: 0x7f070012
-			public const int btnSwitch = 2131165202;
-			
 			// aapt resource value: 0x7f070013
-			public const int btnTest = 2131165203;
+			public const int btnSwitch = 2131165203;
+			
+			// aapt resource value: 0x7f070014
+			public const int btnTest = 2131165204;
 			
 			// aapt resource value: 0x7f07000b
 			public const int dark = 2131165195;
