@@ -10,6 +10,7 @@ using Android.Gms.Maps.Model;
 using Android.Locations;
 using System.Collections.Generic;
 using Android.Graphics;
+using Android.Views.InputMethods;
 
 namespace BCC_Bridge
 {
@@ -19,7 +20,15 @@ namespace BCC_Bridge
         GoogleMap gMap;
         private int mapIndex = 1;
         private Button switchBtn;
-        private EditText address;
+        private EditText addressInput;
+        private EditText vInput;
+        private Marker marker = null;
+
+        enum MarkerType {
+            Normal = 1,
+            Good = 2,
+            Bad = 3
+        }
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -28,22 +37,28 @@ namespace BCC_Bridge
             // Create your application here
             SetContentView(Resource.Layout.Map);
 
-            //switchBtn = FindViewById<Button>(Resource.Id.btnSwitch);
-            //switchBtn.Click += SwitchBtn_Click;
+            string textColor = "#474342", hintColor = "#a99c98";
 
-            address = FindViewById<EditText>(Resource.Id.addressInput);
-            address.SetTextColor(Color.ParseColor("#474342"));
-            address.SetHintTextColor(Color.ParseColor("#a99c98"));
+            switchBtn = FindViewById<Button>(Resource.Id.btnSwitch);
+            switchBtn.Click += SwitchBtn_Click;
 
-            address.EditorAction += Address_EditorAction;
+            addressInput = FindViewById<EditText>(Resource.Id.addressInput);
+            addressInput.SetTextColor(Color.ParseColor(textColor));
+            addressInput.SetHintTextColor(Color.ParseColor(hintColor));
+            addressInput.EditorAction += Address_EditorAction;
+
+            vInput = FindViewById<EditText>(Resource.Id.vehicleInput);
+            vInput.SetTextColor(Color.ParseColor(textColor));
+            vInput.SetHintTextColor(Color.ParseColor(hintColor));
 
             SetUpMap();
         }
 
         private void Address_EditorAction(object sender, EventArgs e)
         {
-            SetCameraFromName(ref gMap, address.Text);
-            
+            SetCameraFromName(gMap, addressInput.Text);
+
+            HideKeyboard(addressInput);
         }
 
         private void SwitchBtn_Click(object sender, EventArgs e)
@@ -56,6 +71,12 @@ namespace BCC_Bridge
             gMap.MapType = mapIndex;
         }
 
+        private void HideKeyboard(EditText editText)
+        {
+            InputMethodManager imm = (InputMethodManager)GetSystemService(InputMethodService);
+            imm.HideSoftInputFromWindow(editText.WindowToken, 0);
+        }
+
         private void SetUpMap()
         {
             if (gMap == null)
@@ -64,7 +85,7 @@ namespace BCC_Bridge
             }
         }
 
-        private void SetCameraFromCoords(ref GoogleMap map, double latitude, double longitude)
+        private void SetCameraFromCoords(GoogleMap map, double latitude, double longitude)
         {
             var camBuilder = new CameraPosition.Builder()
                 .Target(new LatLng(latitude, longitude))
@@ -73,40 +94,50 @@ namespace BCC_Bridge
             var camPos = camBuilder.Build();
             var camUpdate = CameraUpdateFactory.NewCameraPosition(camPos);
 
-            map.MoveCamera(camUpdate);
+            map.AnimateCamera(camUpdate);
         }
 
-        private void SetCameraFromName(ref GoogleMap map, string name)
+        private void SetCameraFromName(GoogleMap map, string name)
         {
-            // hacky (hopefully) temporary solution for GetFromLocationName() timeout bug
             try
             {
                 var geo = new Geocoder(this);
                 var coords = geo.GetFromLocationName(name, 1);
                 double latitude = coords[0].Latitude, longitude = coords[0].Longitude;
 
-                SetCameraFromCoords(ref map, latitude, longitude);
-                SetMarker(ref map, name, latitude, longitude, true);
+                SetCameraFromCoords(map, latitude, longitude);
+                SetMarker(map, MarkerType.Normal, name, latitude, longitude, true);
             } 
-            catch { /* don't do anything fam */ }
+            catch
+            {
+                Toast.MakeText(this, "Invalid Location", ToastLength.Short).Show();
+            }
         }
 
-        private void SetMarker(ref GoogleMap map, string title, double latitude, double longitude, bool moveable)
+        private void SetMarker(GoogleMap map, MarkerType mt, string title, double latitude, double longitude, bool moveable)
         {
-            var marker = new MarkerOptions()
+            var markerOptions = new MarkerOptions()
                 .SetPosition(new LatLng(latitude, longitude))
-                .SetTitle(title);
+                .SetTitle(title)
+                .Draggable(moveable);
 
-            marker.Draggable(moveable);
+            if (mt == MarkerType.Good)
+            {
+                // markerOptions.SetIcon("good_marker");
+            } 
+            else if (mt == MarkerType.Bad)
+            {
+                // markerOptions.SetIcon("bad_marker");
+            }
 
-            map.AddMarker(marker);
+            marker = map.AddMarker(markerOptions);
         }
 
         public void OnMapReady(GoogleMap googleMap)
         {
             gMap = googleMap;
 
-            SetCameraFromName(ref gMap, "Queensland University of Technology");
+            SetCameraFromName(gMap, "Queensland University of Technology");
         }
     }
 }
