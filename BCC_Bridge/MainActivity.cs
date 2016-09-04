@@ -1,12 +1,11 @@
 ﻿using Android.App;
 using Android.Widget;
 using Android.OS;
-using Android.Support.V7.App;
 
 namespace BCC_Bridge
 {
-	[Activity(Label = "BCC Bridge", MainLauncher = true, Theme="@style/MyTheme")]
-	public class MainActivity : ActionBarActivity
+	[Activity(Label = "BCC Bridge", MainLauncher = true)]
+	public class MainActivity : Activity
 	{
 		protected override void OnCreate(Bundle savedInstanceState)
 		{

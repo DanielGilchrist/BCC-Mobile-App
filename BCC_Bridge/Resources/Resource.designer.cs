@@ -2290,9 +2290,6 @@ namespace BCC_Bridge
 			// aapt resource value: 0x7f050014
 			public const int auth_google_play_services_client_google_display_name = 2131034132;
 			
-			// aapt resource value: 0x7f050036
-			public const int closeDrawer = 2131034166;
-			
 			// aapt resource value: 0x7f05002c
 			public const int common_google_play_services_api_unavailable_text = 2131034156;
 			
@@ -2382,9 +2379,6 @@ namespace BCC_Bridge
 			
 			// aapt resource value: 0x7f050034
 			public const int google_maps_key = 2131034164;
-			
-			// aapt resource value: 0x7f050035
-			public const int openDrawer = 2131034165;
 			
 			// aapt resource value: 0x7f050013
 			public const int status_bar_notification_info_overflow = 2131034131;
