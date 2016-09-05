@@ -4,7 +4,7 @@ using Android.OS;
 
 namespace BCC_Bridge
 {
-	[Activity(Label = "BCC Bridge", MainLauncher = true)]
+	[Activity(Label = "BCC Bridge", MainLauncher = true, Theme = "@style/MyTheme")]
 	public class MainActivity : Activity
 	{
 		protected override void OnCreate(Bundle savedInstanceState)

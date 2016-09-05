@@ -14,7 +14,7 @@ using Android.Views.InputMethods;
 
 namespace BCC_Bridge
 {
-    [Activity(Label = "Map")]
+    [Activity(Label = "Map", Theme = "@style/MyTheme")]
     public class MapActivity : Activity, IOnMapReadyCallback
     {
         GoogleMap gMap;
