@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -49,9 +50,9 @@ namespace BCC_Bridge
 
 			mDrawerToggle = new MyActionBarDrawerToggle(
 				this,                       //host activity
-				mDrawerLayout,        		//Drawer Layout
-				Resource.String.openDrawer,	//Open message
-				Resource.String.closeDrawer	//Closed message
+				mDrawerLayout,              //Drawer Layout
+				Resource.String.openDrawer, //Open message
+				Resource.String.closeDrawer //Closed message
 			);
 
 			mDrawerLayout.SetDrawerListener(mDrawerToggle);
@@ -105,4 +106,3 @@ namespace BCC_Bridge
 		}
 	}
 }
-

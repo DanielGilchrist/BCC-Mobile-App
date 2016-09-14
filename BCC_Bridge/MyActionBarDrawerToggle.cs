@@ -1,5 +1,4 @@
-﻿using System;
-using Android.Support.V4.Widget;
+﻿using Android.Support.V4.Widget;
 using Android.Support.V7.App;
 using SupportActionBarDrawerToggle = Android.Support.V7.App.ActionBarDrawerToggle;
 
@@ -11,7 +10,7 @@ namespace BCC_Bridge
 		private int mOpenedResource;
 		private int mClosedResource;
 
-		public MyActionBarDrawerToggle (ActionBarActivity host, DrawerLayout drawerLayout, int openedResource, int closedResource) 
+		public MyActionBarDrawerToggle(ActionBarActivity host, DrawerLayout drawerLayout, int openedResource, int closedResource)
 			: base(host, drawerLayout, openedResource, closedResource)
 		{
 			mHostActivity = host;
@@ -37,4 +36,3 @@ namespace BCC_Bridge
 		}
 	}
 }
-
