@@ -58,7 +58,7 @@ namespace BCC_Bridge
 			mDrawerLayout.SetDrawerListener(mDrawerToggle);
 			SupportActionBar.SetHomeButtonEnabled(true);
 			SupportActionBar.SetDisplayHomeAsUpEnabled(true);
-			//SupportActionBar.SetDisplayShowTitleEnabled(true);
+			SupportActionBar.SetDisplayShowTitleEnabled(true);
 			mDrawerToggle.SyncState();
 
 			if (bundle != null)
