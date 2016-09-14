@@ -13,100 +13,131 @@ using Android.Graphics;
 
 namespace BCC_Bridge
 {
-    [Activity(Label = "Map")]
-    public class MapActivity : Activity, IOnMapReadyCallback
-    {
-        GoogleMap gMap;
-        private int mapIndex = 1;
-        private Button switchBtn;
-        private EditText address;
+	[Activity(Label = "Map")]
+	public class MapActivity : Activity, IOnMapReadyCallback
+	{
+		GoogleMap gMap;
+		private int mapIndex = 1;
+		private Button switchBtn;
+		private EditText addressInput;
+		private EditText vInput;
+		private Marker marker = null;
 
-        protected override void OnCreate(Bundle savedInstanceState)
-        {
-            base.OnCreate(savedInstanceState);
+		enum MarkerType
+		{
+			Normal = 1,
+			Good = 2,
+			Bad = 3
+		}
 
-            // Create your application here
-            SetContentView(Resource.Layout.Map);
+		protected override void OnCreate(Bundle savedInstanceState)
+		{
+			base.OnCreate(savedInstanceState);
 
-            //switchBtn = FindViewById<Button>(Resource.Id.btnSwitch);
-            //switchBtn.Click += SwitchBtn_Click;
+			// Create your application here
+			SetContentView(Resource.Layout.Map);
 
-            address = FindViewById<EditText>(Resource.Id.addressInput);
-            address.SetTextColor(Color.ParseColor("#474342"));
-            address.SetHintTextColor(Color.ParseColor("#a99c98"));
+			string textColor = "#474342", hintColor = "#a99c98";
 
-            address.EditorAction += Address_EditorAction;
+			switchBtn = FindViewById<Button>(Resource.Id.btnSwitch);
+			switchBtn.Click += SwitchBtn_Click;
 
-            SetUpMap();
-        }
+			addressInput = FindViewById<EditText>(Resource.Id.addressInput);
+			addressInput.SetTextColor(Color.ParseColor(textColor));
+			addressInput.SetHintTextColor(Color.ParseColor(hintColor));
+			addressInput.EditorAction += Address_EditorAction;
 
-        private void Address_EditorAction(object sender, EventArgs e)
-        {
-            SetCameraFromName(ref gMap, address.Text);
-            
-        }
+			vInput = FindViewById<EditText>(Resource.Id.vehicleInput);
+			vInput.SetTextColor(Color.ParseColor(textColor));
+			vInput.SetHintTextColor(Color.ParseColor(hintColor));
 
-        private void SwitchBtn_Click(object sender, EventArgs e)
-        {
-            mapIndex++;
-            if (mapIndex > 4)
-            {
-                mapIndex = 1;
-            }
-            gMap.MapType = mapIndex;
-        }
+			SetUpMap();
+		}
 
-        private void SetUpMap()
-        {
-            if (gMap == null)
-            {
-                FragmentManager.FindFragmentById<MapFragment>(Resource.Id.map).GetMapAsync(this);
-            }
-        }
+		private void Address_EditorAction(object sender, EventArgs e)
+		{
+			SetCameraFromName(gMap, addressInput.Text);
 
-        private void SetCameraFromCoords(ref GoogleMap map, double latitude, double longitude)
-        {
-            var camBuilder = new CameraPosition.Builder()
-                .Target(new LatLng(latitude, longitude))
-                .Zoom(16);
+			HideKeyboard(addressInput);
+		}
 
-            var camPos = camBuilder.Build();
-            var camUpdate = CameraUpdateFactory.NewCameraPosition(camPos);
+		private void SwitchBtn_Click(object sender, EventArgs e)
+		{
+			mapIndex++;
+			if (mapIndex > 4)
+			{
+				mapIndex = 1;
+			}
+			gMap.MapType = mapIndex;
+		}
 
-            map.MoveCamera(camUpdate);
-        }
+		private void HideKeyboard(EditText editText)
+		{
+			InputMethodManager imm = (InputMethodManager)GetSystemService(InputMethodService);
+			imm.HideSoftInputFromWindow(editText.WindowToken, 0);
+		}
 
-        private void SetCameraFromName(ref GoogleMap map, string name)
-        {
-            // hacky (hopefully) temporary solution for GetFromLocationName() timeout bug
-            try
-            {
-                var geo = new Geocoder(this);
-                var coords = geo.GetFromLocationName(name, 1);
-                double latitude = coords[0].Latitude, longitude = coords[0].Longitude;
+		private void SetUpMap()
+		{
+			if (gMap == null)
+			{
+				FragmentManager.FindFragmentById<MapFragment>(Resource.Id.map).GetMapAsync(this);
+			}
+		}
 
-                SetCameraFromCoords(ref map, latitude, longitude);
-                SetMarker(ref map, name, latitude, longitude, true);
-            } 
-            catch { /* don't do anything fam */ }
-        }
+		private void SetCameraFromCoords(GoogleMap map, double latitude, double longitude)
+		{
+			var camBuilder = new CameraPosition.Builder()
+				.Target(new LatLng(latitude, longitude))
+				.Zoom(16);
 
-        private void SetMarker(ref GoogleMap map, string title, double latitude, double longitude, bool moveable)
-        {
-            var marker = new MarkerOptions()
-                .SetPosition(new LatLng(latitude, longitude))
-                .SetTitle(title);
+			var camPos = camBuilder.Build();
+			var camUpdate = CameraUpdateFactory.NewCameraPosition(camPos);
 
-            marker.Draggable(moveable);
+			map.AnimateCamera(camUpdate);
+		}
 
-            map.AddMarker(marker);
-        }
+		private void SetCameraFromName(GoogleMap map, string name)
+		{
+			try
+			{
+				var geo = new Geocoder(this);
+				var coords = geo.GetFromLocationName(name, 1);
+				double latitude = coords[0].Latitude, longitude = coords[0].Longitude;
 
-        public void OnMapReady(GoogleMap googleMap)
-        {
-            gMap = googleMap;
+				SetCameraFromCoords(map, latitude, longitude);
+				SetMarker(map, MarkerType.Normal, name, latitude, longitude, true);
+			}
+			catch
+			{
+				Toast.MakeText(this, "Invalid Location", ToastLength.Short).Show();
+			}
+		}
 
-            SetCameraFromName(ref gMap, "Queensland University of Technology");
-        }
-    }
+		private void SetMarker(GoogleMap map, MarkerType mt, string title, double latitude, double longitude, bool moveable)
+		{
+			var markerOptions = new MarkerOptions()
+				.SetPosition(new LatLng(latitude, longitude))
+				.SetTitle(title)
+				.Draggable(moveable);
+
+			if (mt == MarkerType.Good)
+			{
+				// markerOptions.SetIcon("good_marker");
+			}
+			else if (mt == MarkerType.Bad)
+			{
+				// markerOptions.SetIcon("bad_marker");
+			}
+
+			marker = map.AddMarker(markerOptions);
+		}
+
+		public void OnMapReady(GoogleMap googleMap)
+		{
+			gMap = googleMap;
+
+			SetCameraFromName(gMap, "Queensland University of Technology");
+		}
+	}
 }
