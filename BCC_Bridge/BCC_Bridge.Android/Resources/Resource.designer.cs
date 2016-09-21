@@ -47,6 +47,10 @@ namespace BCC_Bridge.Android
 			global::MvvmCross.Binding.Droid.Resource.Styleable.MvxListView = global::BCC_Bridge.Android.Resource.Styleable.MvxListView;
 			global::MvvmCross.Binding.Droid.Resource.Styleable.MvxListView_MvxDropDownItemTemplate = global::BCC_Bridge.Android.Resource.Styleable.MvxListView_MvxDropDownItemTemplate;
 			global::MvvmCross.Binding.Droid.Resource.Styleable.MvxListView_MvxItemTemplate = global::BCC_Bridge.Android.Resource.Styleable.MvxListView_MvxItemTemplate;
+			global::SQLite.Net.Platform.XamarinAndroid.Resource.String.ApplicationName = global::BCC_Bridge.Android.Resource.String.ApplicationName;
+			global::SQLite.Net.Platform.XamarinAndroid.Resource.String.Hello = global::BCC_Bridge.Android.Resource.String.Hello;
+			global::MvvmCross.Plugins.Sqlite.Droid.Resource.String.ApplicationName = global::BCC_Bridge.Android.Resource.String.ApplicationName;
+			global::MvvmCross.Plugins.Sqlite.Droid.Resource.String.Hello = global::BCC_Bridge.Android.Resource.String.Hello;
 		}
 		
 		public partial class Attribute
@@ -102,11 +106,11 @@ namespace BCC_Bridge.Android
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f050000
-			public const int MvvmCrossTagId = 2131034112;
+			// aapt resource value: 0x7f060000
+			public const int MvvmCrossTagId = 2131099648;
 			
-			// aapt resource value: 0x7f050001
-			public const int MvxBindingTagUnique = 2131034113;
+			// aapt resource value: 0x7f060001
+			public const int MvxBindingTagUnique = 2131099649;
 			
 			static Id()
 			{
@@ -162,11 +166,17 @@ namespace BCC_Bridge.Android
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f070001
-			public const int app_name = 2131165185;
+			// aapt resource value: 0x7f050001
+			public const int ApplicationName = 2131034113;
 			
-			// aapt resource value: 0x7f070000
-			public const int hello = 2131165184;
+			// aapt resource value: 0x7f050000
+			public const int Hello = 2131034112;
+			
+			// aapt resource value: 0x7f050003
+			public const int app_name = 2131034115;
+			
+			// aapt resource value: 0x7f050002
+			public const int hello = 2131034114;
 			
 			static String()
 			{
@@ -181,8 +191,8 @@ namespace BCC_Bridge.Android
 		public partial class Style
 		{
 			
-			// aapt resource value: 0x7f060000
-			public const int Theme_Splash = 2131099648;
+			// aapt resource value: 0x7f070000
+			public const int Theme_Splash = 2131165184;
 			
 			static Style()
 			{

@@ -1,9 +1,14 @@
-﻿namespace BCC_Bridge.Core
+﻿using SQLite.Net.Attributes;
+
+namespace BCC_Bridge.Core
 {
+	[Table("Vehicle")]
 	public class Vehicle
 	{
-		public string name { get; set; }
-		public int height { get; set; }
+		[PrimaryKey, AutoIncrement]
+		public int Id { get; set; }
+
+		public string Name { get; set; }
+		public int Height { get; set; }
 	}
 }
-

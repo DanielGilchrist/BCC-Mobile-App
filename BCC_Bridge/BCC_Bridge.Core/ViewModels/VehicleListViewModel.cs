@@ -8,10 +8,10 @@ namespace BCC_Bridge.Core.ViewModels
 		public override void Start()
 		{
 			// Initialise the vehicles list
-			this.vehicles = new List<Vehicle> { };
+			this._vehicles = new List<Vehicle> { };
 
 			// Add a few dummy vehicles
-			var test2 = new Vehicle() { name = "test", height = 200 };
+			var test2 = new Vehicle() { Name = "test", Height = 200 };
 			this.vehicles.Add(test2);
 			this.vehicles.Add(test2);
 			this.vehicles.Add(test2);
