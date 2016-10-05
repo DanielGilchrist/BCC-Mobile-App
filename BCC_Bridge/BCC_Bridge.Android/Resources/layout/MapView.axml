@@ -3,59 +3,59 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <fragment
-        android:id="@+id/map"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="com.google.android.gms.maps.MapFragment"
-        android:layout_marginBottom="0.0dp">
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_margin="5dp">
-            <EditText
-                android:id="@+id/addressInput"
-                android:layout_centerVertical="true"
-                android:layout_width="fill_parent"
-                android:layout_height="40dp"
-                android:layout_alignParentTop="true"
-                android:gravity="center"
-                android:ellipsize="start"
-                android:hint="Enter Location"
-                android:inputType="textCapSentences|textAutoCorrect"
-                android:imeOptions="actionSearch"
-                android:singleLine="true"
-                android:background="@drawable/MapStyles" />
-            <EditText
-                android:id="@+id/vehicleInput"
-                android:layout_marginLeft="100dp"
-                android:layout_centerVertical="true"
-                android:layout_width="180dp"
-                android:layout_height="40dp"
-                android:layout_alignParentBottom="true"
-                android:gravity="center"
-                android:ellipsize="start"
-                android:hint="Vehicle Height (cm)"
-                android:inputType="number"
-                android:background="@drawable/MapStyles" />
-            <Button
-                android:id="@+id/btnLocation"
-                android:text=""
-                android:background="@drawable/location"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginTop="50dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true" />
-            <Button
-                android:id="@+id/btnSwitch"
-                android:text=""
-                android:background="@drawable/layers"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginTop="95dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true" />
-        </RelativeLayout>
-    </fragment>
+  <fragment
+      android:id="@+id/map"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:name="com.google.android.gms.maps.MapFragment"
+      android:layout_marginBottom="0.0dp">
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="5dp">
+      <EditText
+          android:id="@+id/addressInput"
+          android:layout_centerVertical="true"
+          android:layout_width="fill_parent"
+          android:layout_height="40dp"
+          android:layout_alignParentTop="true"
+          android:gravity="center"
+          android:ellipsize="start"
+          android:hint="Enter Location"
+          android:inputType="textCapSentences|textAutoCorrect"
+          android:imeOptions="actionSearch"
+          android:singleLine="true"
+          android:background="@drawable/MapStyles" />
+      <EditText
+          android:id="@+id/vehicleInput"
+          android:layout_marginLeft="100dp"
+          android:layout_centerVertical="true"
+          android:layout_width="180dp"
+          android:layout_height="40dp"
+          android:layout_alignParentBottom="true"
+          android:gravity="center"
+          android:ellipsize="start"
+          android:hint="Vehicle Height (cm)"
+          android:inputType="number"
+          android:background="@drawable/MapStyles" />
+      <Button
+          android:id="@+id/btnLocation"
+          android:text=""
+          android:background="@drawable/location"
+          android:layout_width="35dp"
+          android:layout_height="35dp"
+          android:layout_marginTop="50dp"
+          android:layout_alignParentRight="true"
+          android:layout_alignParentTop="true" />
+      <Button
+          android:id="@+id/btnSwitch"
+          android:text=""
+          android:background="@drawable/layers"
+          android:layout_width="35dp"
+          android:layout_height="35dp"
+          android:layout_marginTop="95dp"
+          android:layout_alignParentRight="true"
+          android:layout_alignParentTop="true" />
+    </RelativeLayout>
+  </fragment>
 </LinearLayout>

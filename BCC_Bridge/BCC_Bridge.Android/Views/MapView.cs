@@ -14,7 +14,7 @@ using Android.Graphics;
 using Android.Views.InputMethods;
 using MvvmCross.Droid.Views;
 
-namespace BCC_Bridge.Droid.Views
+namespace BCC_Bridge.Android.Views
 {
     [Activity(Label = "View for MapViewModel")]
     public class MapView : MvxActivity, IOnMapReadyCallback
