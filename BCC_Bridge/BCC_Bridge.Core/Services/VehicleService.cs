@@ -1,5 +1,4 @@
-﻿using MvxSqlite.Models;
-using MvvmCross.Plugins.Sqlite;
+﻿using MvvmCross.Plugins.Sqlite;
 using BCC_Bridge.Core;
 using SQLite;
 using System.Collections.Generic;
