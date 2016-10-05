@@ -7,6 +7,6 @@ namespace BCC_Bridge.Core
         List<Vehicle> All();
         void Add(Vehicle vehicle);
         void Delete(Vehicle vehicle);
-        void Update(Vehicle vehicle)
+        void Update(Vehicle vehicle);
     }
 }
