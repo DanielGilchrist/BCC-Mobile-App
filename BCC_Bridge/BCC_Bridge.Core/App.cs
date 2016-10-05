@@ -11,7 +11,7 @@ namespace BCC_Bridge.Core
                 .AsInterfaces()
                 .RegisterAsLazySingleton();
 
-			RegisterAppStart<ViewModels.VehicleListViewModel>();
+			RegisterAppStart<ViewModels.FirstViewModel>();
         }
     }
 }

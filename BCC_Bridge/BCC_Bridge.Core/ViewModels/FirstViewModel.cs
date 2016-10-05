@@ -2,14 +2,13 @@ using MvvmCross.Core.ViewModels;
 
 namespace BCC_Bridge.Core.ViewModels
 {
-    public class FirstViewModel 
-        : MvxViewModel
+    public class FirstViewModel : MvxViewModel
     {
-        private string _hello = "Hello MvvmCross";
-        public string Hello
-        { 
-            get { return _hello; }
-            set { SetProperty (ref _hello, value); }
+        public IMvxCommand MapsBtn { get { return ShowCommand<MapViewModel>(); } }
+
+        private MvxCommand ShowCommand<TViewModel>() where TViewModel : IMvxViewModel
+        {
+            return new MvxCommand(() => ShowViewModel<TViewModel>());
         }
     }
 }
