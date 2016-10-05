@@ -11,9 +11,14 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       local:MvxBind="Click MapsBtn" />
+  <Button
+      android:text="Vehicle List"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      local:MvxBind="Click VehicleBtn" />
   <!--<Button
       android:text="Menu"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:id="@+id/btnMenu" />-->
+      local:MvxBind="Click MapsBtn" /> -->
 </LinearLayout>
