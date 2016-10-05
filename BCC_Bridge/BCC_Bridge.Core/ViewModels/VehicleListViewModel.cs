@@ -3,42 +3,40 @@ using MvvmCross.Core.ViewModels;
 
 namespace BCC_Bridge.Core.ViewModels
 {
-	public class VehicleListViewModel : MvxViewModel
-	{
-		public override void Start()
-		{
-			// Initialise the vehicles list
-			this._vehicles = new List<Vehicle> { };
+    public class VehicleListViewModel : MvxViewModel
+    {
+        private readonly IVehicleService _collectionService;
 
-			// Add a few dummy vehicles
-			var test2 = new Vehicle() { Name = "test", Height = 200 };
-			this.vehicles.Add(test2);
-			this.vehicles.Add(test2);
-			this.vehicles.Add(test2);
-			this.vehicles.Add(test2);
-			this.vehicles.Add(test2);
-		}
+        public VehicleListViewModel(IVehicleService collectionService)
+        {
+            _collectionService = collectionService;
+            _collectionService.Add(new Vehicle() { Name = "test", Height = 120 });
+            Vehicles = _collectionService.All();
+        }
 
-		private List<Vehicle> _vehicles;
-		public List<Vehicle> vehicles
-		{
-			get { return _vehicles; }
-			set { _vehicles = value; RaisePropertyChanged(() => vehicles); }
-		}
+        private List<Vehicle> _vehicles;
+        public List<Vehicle> Vehicles
+        {
+            get { return _vehicles; }
+            set { _vehicles = value; RaisePropertyChanged(() => Vehicles); }
+        }
 
-		private MvvmCross.Core.ViewModels.MvxCommand<Vehicle> _itemSelectedCommand;
-		public System.Windows.Input.ICommand ItemSelectedCommand
-		{
-			get
-			{
-				_itemSelectedCommand = _itemSelectedCommand ?? new MvvmCross.Core.ViewModels.MvxCommand<Vehicle>(DoSelectItem);
-				return _itemSelectedCommand;
-			}
-		}
 
-		private void DoSelectItem(Vehicle vehicle)
-		{
-			//Console.WriteLine(vehicle);
-		}
-	}
+
+
+        private MvvmCross.Core.ViewModels.MvxCommand<Vehicle> _itemSelectedCommand;
+        public System.Windows.Input.ICommand ItemSelectedCommand
+        {
+            get
+            {
+                _itemSelectedCommand = _itemSelectedCommand ?? new MvvmCross.Core.ViewModels.MvxCommand<Vehicle>(DoSelectItem);
+                return _itemSelectedCommand;
+            }
+        }
+
+        private void DoSelectItem(Vehicle vehicle)
+        {
+            //Console.WriteLine(vehicle);
+        }
+    }
 }
