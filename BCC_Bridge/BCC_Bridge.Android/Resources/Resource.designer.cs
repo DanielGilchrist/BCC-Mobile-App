@@ -47,6 +47,8 @@ namespace BCC_Bridge.Android
 			global::MvvmCross.Binding.Droid.Resource.Styleable.MvxListView = global::BCC_Bridge.Android.Resource.Styleable.MvxListView;
 			global::MvvmCross.Binding.Droid.Resource.Styleable.MvxListView_MvxDropDownItemTemplate = global::BCC_Bridge.Android.Resource.Styleable.MvxListView_MvxDropDownItemTemplate;
 			global::MvvmCross.Binding.Droid.Resource.Styleable.MvxListView_MvxItemTemplate = global::BCC_Bridge.Android.Resource.Styleable.MvxListView_MvxItemTemplate;
+			global::MvvmCross.Plugins.Sqlite.Droid.Resource.String.ApplicationName = global::BCC_Bridge.Android.Resource.String.ApplicationName;
+			global::MvvmCross.Plugins.Sqlite.Droid.Resource.String.Hello = global::BCC_Bridge.Android.Resource.String.Hello;
 		}
 		
 		public partial class Attribute
@@ -515,8 +517,14 @@ namespace BCC_Bridge.Android
 		public partial class String
 		{
 			
+			// aapt resource value: 0x7f050020
+			public const int ApplicationName = 2131034144;
+			
 			// aapt resource value: 0x7f05001f
-			public const int app_name = 2131034143;
+			public const int Hello = 2131034143;
+			
+			// aapt resource value: 0x7f050021
+			public const int app_name = 2131034145;
 			
 			// aapt resource value: 0x7f050001
 			public const int auth_google_play_services_client_facebook_display_name = 2131034113;
@@ -611,8 +619,8 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f05001e
 			public const int common_signin_button_text_long = 2131034142;
 			
-			// aapt resource value: 0x7f050020
-			public const int google_maps_key = 2131034144;
+			// aapt resource value: 0x7f050022
+			public const int google_maps_key = 2131034146;
 			
 			static String()
 			{
