@@ -1,3 +1,4 @@
+using MvvmCross.Platform;
 using MvvmCross.Platform.IoC;
 
 namespace BCC_Bridge.Core
@@ -10,7 +11,6 @@ namespace BCC_Bridge.Core
                 .EndingWith("Service")
                 .AsInterfaces()
                 .RegisterAsLazySingleton();
-
 			RegisterAppStart<ViewModels.FirstViewModel>();
         }
     }
