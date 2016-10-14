@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using MvvmCross.Core.ViewModels;
 
 namespace BCC_Bridge.Core.ViewModels
@@ -10,8 +11,15 @@ namespace BCC_Bridge.Core.ViewModels
         public VehicleListViewModel(IVehicleService collectionService)
         {
             _collectionService = collectionService;
-            _collectionService.Add(new Vehicle() { Name = "test", Height = 120 });
-            Vehicles = _collectionService.All();
+			var veh = new Vehicle() { Name = "test" };
+            _collectionService.Add(veh);
+            this.Vehicles = _collectionService.All();
+
+			foreach (Vehicle vehicle in this.Vehicles)
+			{
+				Debug.WriteLine(vehicle);
+			}
+
         }
 
         private List<Vehicle> _vehicles;
