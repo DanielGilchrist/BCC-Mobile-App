@@ -390,8 +390,8 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f080001
 			public const int MvxBindingTagUnique = 2131230721;
 			
-			// aapt resource value: 0x7f080010
-			public const int addressInput = 2131230736;
+			// aapt resource value: 0x7f080015
+			public const int addressInput = 2131230741;
 			
 			// aapt resource value: 0x7f080007
 			public const int adjust_height = 2131230727;
@@ -402,14 +402,23 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f08000c
 			public const int auto = 2131230732;
 			
-			// aapt resource value: 0x7f080012
-			public const int btnLocation = 2131230738;
+			// aapt resource value: 0x7f080017
+			public const int btnLocation = 2131230743;
+			
+			// aapt resource value: 0x7f080018
+			public const int btnSwitch = 2131230744;
 			
 			// aapt resource value: 0x7f080013
-			public const int btnSwitch = 2131230739;
+			public const int button1 = 2131230739;
 			
 			// aapt resource value: 0x7f08000d
 			public const int dark = 2131230733;
+			
+			// aapt resource value: 0x7f080010
+			public const int editText1 = 2131230736;
+			
+			// aapt resource value: 0x7f080012
+			public const int editText2 = 2131230738;
 			
 			// aapt resource value: 0x7f080002
 			public const int hybrid = 2131230722;
@@ -420,8 +429,8 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f08000e
 			public const int light = 2131230734;
 			
-			// aapt resource value: 0x7f08000f
-			public const int map = 2131230735;
+			// aapt resource value: 0x7f080014
+			public const int map = 2131230740;
 			
 			// aapt resource value: 0x7f080003
 			public const int none = 2131230723;
@@ -438,8 +447,14 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f080006
 			public const int terrain = 2131230726;
 			
+			// aapt resource value: 0x7f08000f
+			public const int textView1 = 2131230735;
+			
 			// aapt resource value: 0x7f080011
-			public const int vehicleInput = 2131230737;
+			public const int textView2 = 2131230737;
+			
+			// aapt resource value: 0x7f080016
+			public const int vehicleInput = 2131230742;
 			
 			// aapt resource value: 0x7f08000b
 			public const int wide = 2131230731;
@@ -474,19 +489,22 @@ namespace BCC_Bridge.Android
 		{
 			
 			// aapt resource value: 0x7f040000
-			public const int FirstView = 2130968576;
+			public const int AddVehicleView = 2130968576;
 			
 			// aapt resource value: 0x7f040001
-			public const int ListItem_Vehicle = 2130968577;
+			public const int FirstView = 2130968577;
 			
 			// aapt resource value: 0x7f040002
-			public const int MapView = 2130968578;
+			public const int ListItem_Vehicle = 2130968578;
 			
 			// aapt resource value: 0x7f040003
-			public const int SplashScreen = 2130968579;
+			public const int MapView = 2130968579;
 			
 			// aapt resource value: 0x7f040004
-			public const int VehicleListView = 2130968580;
+			public const int SplashScreen = 2130968580;
+			
+			// aapt resource value: 0x7f040005
+			public const int VehicleListView = 2130968581;
 			
 			static Layout()
 			{

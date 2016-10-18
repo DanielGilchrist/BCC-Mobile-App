@@ -38,6 +38,7 @@
     <Compile Include="Models\Vehicle.cs" />
     <Compile Include="Services\VehicleService.cs" />
     <Compile Include="Services\IVehicleService.cs" />
+    <Compile Include="ViewModels\AddVehicleViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MvvmCross.Platform">
