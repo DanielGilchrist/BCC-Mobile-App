@@ -1,18 +1,16 @@
 using System;
-using Android;
 using Android.App;
-using Android.Content;
-using Android.Runtime;
-using Android.Views;
 using Android.Widget;
 using Android.OS;
 using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
-using Android.Locations;
 using System.Collections.Generic;
 using Android.Graphics;
 using Android.Views.InputMethods;
 using MvvmCross.Droid.Views;
+using MvxSqlite.Services;
+using BCC_Bridge.Core;
+using Android.Locations;
 
 namespace BCC_Bridge.Android.Views
 {
@@ -20,6 +18,8 @@ namespace BCC_Bridge.Android.Views
     public class MapView : MvxActivity, IOnMapReadyCallback
     {
         GoogleMap gMap;
+        BridgeService bridgeService;
+        List<Bridge> bridges;
         private int mapIndex = 1;
         private Button switchBtn;
         private EditText addressInput;
@@ -51,6 +51,9 @@ namespace BCC_Bridge.Android.Views
             vInput = FindViewById<EditText>(Resource.Id.vehicleInput);
             vInput.SetTextColor(Color.ParseColor(textColor));
             vInput.SetHintTextColor(Color.ParseColor(hintColor));
+
+            bridgeService = new BridgeService();
+            bridges = bridgeService.All();
 
             SetUpMap();
         }
@@ -106,6 +109,7 @@ namespace BCC_Bridge.Android.Views
                 var coords = geo.GetFromLocationName(name, 1);
                 double latitude = coords[0].Latitude, longitude = coords[0].Longitude;
 
+                
                 SetCameraFromCoords(map, latitude, longitude);
                 SetMarker(map, MarkerType.Normal, name, latitude, longitude, true);
             }
@@ -124,11 +128,11 @@ namespace BCC_Bridge.Android.Views
 
             if (mt == MarkerType.Good)
             {
-                // markerOptions.SetIcon("good_marker");
+                markerOptions.SetIcon(BitmapDescriptorFactory.FromResource(Resource.Drawable.good_marker));
             }
             else if (mt == MarkerType.Bad)
             {
-                // markerOptions.SetIcon("bad_marker");
+                markerOptions.SetIcon(BitmapDescriptorFactory.FromResource(Resource.Drawable.bad_marker));
             }
 
             marker = map.AddMarker(markerOptions);
@@ -139,6 +143,21 @@ namespace BCC_Bridge.Android.Views
             gMap = googleMap;
 
             SetCameraFromName(gMap, "Queensland University of Technology");
+
+            /*MarkerType type;
+            for (int i = 0; i < bridges.Count; i++)
+            {
+
+                if (bridges[i].Signed_Clearance < 4.0)
+                {
+                    type = MarkerType.Bad;
+                } else
+                {
+                    type = MarkerType.Good;
+                }
+
+                SetMarker(gMap, type, bridges[i].Signed_Clearance.ToString(), bridges[i].Latitude, bridges[i].Longitude, false);
+            }*/
         }
     }
 }
