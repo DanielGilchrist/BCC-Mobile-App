@@ -1,6 +1,7 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCC_Bridge.Core", "BCC_Bridge.Core\BCC_Bridge.Core.csproj", "{FFB10055-0FA3-4BF6-80E8-C627232278BB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCC_Bridge.Android", "BCC_Bridge.Android\BCC_Bridge.Android.csproj", "{1D826C4E-071B-4312-A65C-CFDBA28BBBB2}"
@@ -17,7 +18,11 @@ Global
 		{FFB10055-0FA3-4BF6-80E8-C627232278BB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1D826C4E-071B-4312-A65C-CFDBA28BBBB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1D826C4E-071B-4312-A65C-CFDBA28BBBB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D826C4E-071B-4312-A65C-CFDBA28BBBB2}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{1D826C4E-071B-4312-A65C-CFDBA28BBBB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D826C4E-071B-4312-A65C-CFDBA28BBBB2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

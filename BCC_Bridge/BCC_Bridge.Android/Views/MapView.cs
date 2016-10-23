@@ -10,18 +10,23 @@ using Android.Views.InputMethods;
 using MvvmCross.Droid.Views;
 using MvxSqlite.Services;
 using BCC_Bridge.Core;
+using BCC_Bridge.Core.ViewModels;
+using BCC_Bridge.Core.Models;
 using Android.Locations;
 
 namespace BCC_Bridge.Android.Views
 {
-    [Activity(Label = "View for MapViewModel")]
+    [Activity(Label = "MapView")]
     public class MapView : MvxActivity, IOnMapReadyCallback
     {
-        GoogleMap gMap;
+        private delegate IOnMapReadyCallback OnMapReadyCallback();
+        private GoogleMap gMap;
+        MapViewModel mapViewModel;
         BridgeService bridgeService;
         List<Bridge> bridges;
         private int mapIndex = 1;
         private Button switchBtn;
+        private Button locationBtn;
         private EditText addressInput;
         private EditText vInput;
         private Marker marker = null;
@@ -35,7 +40,15 @@ namespace BCC_Bridge.Android.Views
 
         protected override void OnCreate(Bundle bundle)
         {
-            base.OnCreate(bundle);
+            try
+            {
+                base.OnCreate(bundle);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(string.Format("InnerException\n{0}", e.InnerException));
+            }
+
             SetContentView(Resource.Layout.MapView);
 
             string textColor = "#474342", hintColor = "#a99c98";
@@ -56,6 +69,48 @@ namespace BCC_Bridge.Android.Views
             bridges = bridgeService.All();
 
             SetUpMap();
+        }
+
+        private void SetUpMap()
+        {
+            mapViewModel = ViewModel as MapViewModel;
+            if (gMap == null)
+            {
+                var mapFragment = FragmentManager.FindFragmentById<MapFragment>(Resource.Id.map) as MapFragment;
+                mapFragment.GetMapAsync(this);
+            }
+        }
+
+        public void OnMapReady(GoogleMap googleMap)
+        {
+            mapViewModel.OnMapSetup(SetMyLocation, SetMyLocationMarker);
+            gMap = googleMap;
+            gMap.SetPadding(0, 114, 0, 0);
+            gMap.MyLocationEnabled = true;
+            gMap.MyLocationChange += Map_MyLocationChange;
+
+            /*MarkerType type;
+            for (int i = 0; i < bridges.Count; i++)
+            {
+
+                if (bridges[i].Signed_Clearance < 4.0)
+                {
+                    type = MarkerType.Bad;
+                } else
+                {
+                    type = MarkerType.Good;
+                }
+
+                SetMarker(gMap, type, bridges[i].Signed_Clearance.ToString(), bridges[i].Latitude, bridges[i].Longitude, false);
+            }*/
+        }
+
+        private void Map_MyLocationChange(object sender, GoogleMap.MyLocationChangeEventArgs e)
+        {
+            gMap.MyLocationChange -= Map_MyLocationChange;
+            var location = new GeoLocation(e.Location.Latitude, e.Location.Longitude);
+            SetMyLocation(location);
+            mapViewModel.OnMyLocationChanged(location);
         }
 
         private void Address_EditorAction(object sender, EventArgs e)
@@ -81,12 +136,16 @@ namespace BCC_Bridge.Android.Views
             imm.HideSoftInputFromWindow(editText.WindowToken, 0);
         }
 
-        private void SetUpMap()
+        private void SetMyLocation(GeoLocation geoLocation, float zoom = 18)
         {
-            if (gMap == null)
-            {
-                FragmentManager.FindFragmentById<MapFragment>(Resource.Id.map).GetMapAsync(this);
-            }
+            CameraPosition.Builder camBuilder = CameraPosition.InvokeBuilder();
+            camBuilder.Target(new LatLng(geoLocation.Latitude, geoLocation.Longitude));
+            camBuilder.Zoom(zoom);
+
+            var cameraPosition = camBuilder.Build();
+            var cameraUpdate = CameraUpdateFactory.NewCameraPosition(cameraPosition);
+
+            gMap.AnimateCamera(cameraUpdate);
         }
 
         private void SetCameraFromCoords(GoogleMap map, double latitude, double longitude)
@@ -111,7 +170,6 @@ namespace BCC_Bridge.Android.Views
 
                 
                 SetCameraFromCoords(map, latitude, longitude);
-                SetMarker(map, MarkerType.Normal, name, latitude, longitude, true);
             }
             catch
             {
@@ -119,7 +177,15 @@ namespace BCC_Bridge.Android.Views
             }
         }
 
-        private void SetMarker(GoogleMap map, MarkerType mt, string title, double latitude, double longitude, bool moveable)
+        private void SetMyLocationMarker(GeoLocation location)
+        {
+            /*var markerOptions = new MarkerOptions();
+            markerOptions.SetPosition(new LatLng(location.Latitude, location.Longitude));
+            markerOptions.SetTitle(location.Locality);
+            gMap.AddMarker(markerOptions);*/
+        }
+
+        private void SetMarker(MarkerType mt, string title, double latitude, double longitude, bool moveable)
         {
             var markerOptions = new MarkerOptions()
                 .SetPosition(new LatLng(latitude, longitude))
@@ -135,29 +201,7 @@ namespace BCC_Bridge.Android.Views
                 markerOptions.SetIcon(BitmapDescriptorFactory.FromResource(Resource.Drawable.bad_marker));
             }
 
-            marker = map.AddMarker(markerOptions);
-        }
-
-        public void OnMapReady(GoogleMap googleMap)
-        {
-            gMap = googleMap;
-
-            SetCameraFromName(gMap, "Queensland University of Technology");
-
-            /*MarkerType type;
-            for (int i = 0; i < bridges.Count; i++)
-            {
-
-                if (bridges[i].Signed_Clearance < 4.0)
-                {
-                    type = MarkerType.Bad;
-                } else
-                {
-                    type = MarkerType.Good;
-                }
-
-                SetMarker(gMap, type, bridges[i].Signed_Clearance.ToString(), bridges[i].Latitude, bridges[i].Longitude, false);
-            }*/
+            marker = gMap.AddMarker(markerOptions);
         }
     }
 }

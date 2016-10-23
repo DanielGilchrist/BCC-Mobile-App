@@ -11,7 +11,7 @@ namespace BCC_Bridge.Core
                 .EndingWith("Service")
                 .AsInterfaces()
                 .RegisterAsLazySingleton();
-			RegisterAppStart<ViewModels.FirstViewModel>();
+			RegisterAppStart<ViewModels.MapViewModel>();
         }
     }
 }

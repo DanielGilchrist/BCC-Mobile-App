@@ -409,10 +409,7 @@ namespace BCC_Bridge.Android
 			public const int auto = 2131230732;
 			
 			// aapt resource value: 0x7f080017
-			public const int btnLocation = 2131230743;
-			
-			// aapt resource value: 0x7f080018
-			public const int btnSwitch = 2131230744;
+			public const int btnSwitch = 2131230743;
 			
 			// aapt resource value: 0x7f080013
 			public const int button1 = 2131230739;
