@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:local="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -12,7 +13,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText1" />
+        local:MvxBind="Text VehicleName" />
     <TextView
         android:text="Vehicle Height (in metres)"
         android:textAppearance="?android:attr/textAppearanceSmall"
@@ -23,10 +24,10 @@
         android:inputType="numberDecimal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText2" />
+        local:MvxBind="Text VehicleHeight" />
     <Button
         android:text="Save Vehicle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/button1" />
+        local:MvxBind="Click SaveVehicleButton" />
 </LinearLayout>

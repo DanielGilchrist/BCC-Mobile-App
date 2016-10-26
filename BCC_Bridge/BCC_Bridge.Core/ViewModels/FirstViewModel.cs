@@ -6,6 +6,7 @@ namespace BCC_Bridge.Core.ViewModels
     {
         public IMvxCommand MapsBtn { get { return ShowCommand<MapViewModel>(); } }
         public IMvxCommand VehicleBtn { get { return ShowCommand<VehicleListViewModel>(); } }
+		public IMvxCommand AddVehicleBtn { get { return ShowCommand<AddVehicleViewModel>(); } }
 
         private MvxCommand ShowCommand<TViewModel>() where TViewModel : IMvxViewModel
         {
