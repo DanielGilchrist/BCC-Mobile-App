@@ -14,44 +14,44 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_margin="5dp">
-          <EditText
-              android:id="@+id/addressInput"
-              android:layout_centerVertical="true"
-              android:layout_width="fill_parent"
-              android:layout_height="50dp"
-              android:layout_alignParentTop="true"
-              android:layout_marginTop="6dp"
-              android:layout_marginLeft="6dp"
-              android:layout_marginRight="6dp"
-              android:gravity="center"
-              android:ellipsize="start"
-              android:hint="Enter Location"
-              android:inputType="textCapSentences|textAutoCorrect"
-              android:imeOptions="actionSearch"
-              android:singleLine="true"
-              android:background="@drawable/MapStyles" />
-          <EditText
-              android:id="@+id/vehicleInput"
-              android:layout_marginLeft="100dp"
-              android:layout_centerVertical="true"
-              android:layout_width="180dp"
-              android:layout_height="40dp"
-              android:layout_alignParentBottom="true"
-              android:gravity="center"
-              android:ellipsize="start"
-              android:hint="Vehicle Height (cm)"
-              android:inputType="number"
-              android:background="@drawable/MapStyles" />
-          <Button
-              android:id="@+id/btnSwitch"
-              android:text=""
-              android:background="@drawable/layers"
-              android:layout_width="35dp"
-              android:layout_height="35dp"
-              android:layout_marginTop="111dp"
-              android:layout_marginRight="8dp"
-              android:layout_alignParentRight="true"
-              android:layout_alignParentTop="true" />
+            <EditText
+                android:id="@+id/addressInput"
+                android:layout_centerVertical="true"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:gravity="center"
+                android:ellipsize="start"
+                android:hint="Enter Location"
+                android:inputType="textCapSentences|textAutoCorrect"
+                android:imeOptions="actionSearch"
+                android:singleLine="true"
+                android:background="@drawable/MapStyles" />
+            <EditText
+                android:id="@+id/vehicleInput"
+                android:layout_marginLeft="100dp"
+                android:layout_centerVertical="true"
+                android:layout_width="180dp"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:ellipsize="start"
+                android:hint="Vehicle Height (cm)"
+                android:inputType="numberDecimal"
+                android:background="@drawable/MapStyles" />
+            <Button
+                android:id="@+id/btnSwitch"
+                android:text=""
+                android:background="@drawable/layers"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginTop="111dp"
+                android:layout_marginRight="8dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true" />
         </RelativeLayout>
     </fragment>
 </LinearLayout>

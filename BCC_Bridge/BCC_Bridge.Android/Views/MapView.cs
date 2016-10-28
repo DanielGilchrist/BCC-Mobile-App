@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Android.App;
 using Android.Widget;
 using Android.OS;
@@ -26,10 +27,11 @@ namespace BCC_Bridge.Android.Views
         List<Bridge> bridges;
         private int mapIndex = 1;
         private Button switchBtn;
-        private Button locationBtn;
         private EditText addressInput;
         private EditText vInput;
         private Marker marker = null;
+        private double vehicleHeight;
+        private bool placingBridgeMarkers;
 
         enum MarkerType
         {
@@ -40,14 +42,7 @@ namespace BCC_Bridge.Android.Views
 
         protected override void OnCreate(Bundle bundle)
         {
-            try
-            {
-                base.OnCreate(bundle);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(string.Format("InnerException\n{0}", e.InnerException));
-            }
+            base.OnCreate(bundle);
 
             SetContentView(Resource.Layout.MapView);
 
@@ -64,6 +59,9 @@ namespace BCC_Bridge.Android.Views
             vInput = FindViewById<EditText>(Resource.Id.vehicleInput);
             vInput.SetTextColor(Color.ParseColor(textColor));
             vInput.SetHintTextColor(Color.ParseColor(hintColor));
+            vInput.EditorAction += VehicleInput_EditorAction;
+            vehicleHeight = 4;
+            placingBridgeMarkers = false;
 
             bridgeService = new BridgeService();
             bridges = bridgeService.All();
@@ -89,20 +87,7 @@ namespace BCC_Bridge.Android.Views
             gMap.MyLocationEnabled = true;
             gMap.MyLocationChange += Map_MyLocationChange;
 
-            /*MarkerType type;
-            for (int i = 0; i < bridges.Count; i++)
-            {
-
-                if (bridges[i].Signed_Clearance < 4.0)
-                {
-                    type = MarkerType.Bad;
-                } else
-                {
-                    type = MarkerType.Good;
-                }
-
-                SetMarker(gMap, type, bridges[i].Signed_Clearance.ToString(), bridges[i].Latitude, bridges[i].Longitude, false);
-            }*/
+            ThreadPool.QueueUserWorkItem(o => SetBridgeMarkers(bridges, vehicleHeight));
         }
 
         private void Map_MyLocationChange(object sender, GoogleMap.MyLocationChangeEventArgs e)
@@ -118,6 +103,26 @@ namespace BCC_Bridge.Android.Views
             SetCameraFromName(gMap, addressInput.Text);
 
             HideKeyboard(addressInput);
+        }
+
+        private void VehicleInput_EditorAction(object sender, EventArgs e)
+        {
+            HideKeyboard(vInput);
+
+            if (vInput.Text != "")
+            {
+                vehicleHeight = double.Parse(vInput.Text);
+
+                if (placingBridgeMarkers == true)
+                {
+                    Toast.MakeText(this, "Please wait for bridge markers to be placed before entering a new value", ToastLength.Short).Show();
+                }
+                else
+                {
+                    gMap.Clear();
+                    ThreadPool.QueueUserWorkItem(o => SetBridgeMarkers(bridges, vehicleHeight));
+                }
+            }
         }
 
         private void SwitchBtn_Click(object sender, EventArgs e)
@@ -202,6 +207,31 @@ namespace BCC_Bridge.Android.Views
             }
 
             marker = gMap.AddMarker(markerOptions);
+        }
+
+        private void SetBridgeMarkers(List<Bridge> bridges, double height)
+        {
+            RunOnUiThread(() => Toast.MakeText(this, "Loading Bridge Markers...", ToastLength.Short).Show());
+            placingBridgeMarkers = true;
+
+            MarkerType type;
+            for (int i = 0; i < bridges.Count - 1; i++)
+            {
+                if (bridges[i].Signed_Clearance <= height)
+                {
+                    type = MarkerType.Bad;
+                }
+                else
+                {
+                    type = MarkerType.Good;
+                }
+
+                Thread.Sleep(10); // doesn't work without this... 
+                RunOnUiThread(() => SetMarker(type, bridges[i].Signed_Clearance.ToString(), bridges[i].Latitude, bridges[i].Longitude, false));
+            }
+
+            placingBridgeMarkers = false;
+            RunOnUiThread(() => Toast.MakeText(this, "Bridge Markers Loaded", ToastLength.Short).Show());
         }
     }
 }
