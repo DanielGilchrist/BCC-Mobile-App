@@ -14,6 +14,12 @@ using BCC_Bridge.Core;
 using BCC_Bridge.Core.ViewModels;
 using BCC_Bridge.Core.Models;
 using Android.Locations;
+using System.Net;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.Text;
+using System.Linq;
+using BCC_Bridge.Android.Maps;
 
 namespace BCC_Bridge.Android.Views
 {
@@ -32,6 +38,9 @@ namespace BCC_Bridge.Android.Views
         private Marker marker = null;
         private double vehicleHeight;
         private bool placingBridgeMarkers;
+        GeoLocation myGeoLocation;
+        WebClient webclient;
+        LatLng destination;
 
         enum MarkerType
         {
@@ -93,9 +102,9 @@ namespace BCC_Bridge.Android.Views
         private void Map_MyLocationChange(object sender, GoogleMap.MyLocationChangeEventArgs e)
         {
             gMap.MyLocationChange -= Map_MyLocationChange;
-            var location = new GeoLocation(e.Location.Latitude, e.Location.Longitude);
-            SetMyLocation(location);
-            mapViewModel.OnMyLocationChanged(location);
+            myGeoLocation = new GeoLocation(e.Location.Latitude, e.Location.Longitude);
+            SetMyLocation(myGeoLocation);
+            mapViewModel.OnMyLocationChanged(myGeoLocation);
         }
 
         private void Address_EditorAction(object sender, EventArgs e)
@@ -144,7 +153,7 @@ namespace BCC_Bridge.Android.Views
         private void SetMyLocation(GeoLocation geoLocation, float zoom = 18)
         {
             CameraPosition.Builder camBuilder = CameraPosition.InvokeBuilder();
-            camBuilder.Target(new LatLng(geoLocation.Latitude, geoLocation.Longitude));
+            camBuilder.Target(GetMyLocation());
             camBuilder.Zoom(zoom);
 
             var cameraPosition = camBuilder.Build();
@@ -153,11 +162,16 @@ namespace BCC_Bridge.Android.Views
             gMap.AnimateCamera(cameraUpdate);
         }
 
-        private void SetCameraFromCoords(GoogleMap map, double latitude, double longitude)
+        private LatLng GetMyLocation()
+        {
+            return new LatLng(myGeoLocation.Latitude, myGeoLocation.Longitude);
+        }
+
+        private void SetCameraFromCoords(GoogleMap map, double latitude, double longitude, float zoom = 16)
         {
             var camBuilder = new CameraPosition.Builder()
                 .Target(new LatLng(latitude, longitude))
-                .Zoom(16);
+                .Zoom(zoom);
 
             var camPos = camBuilder.Build();
             var camUpdate = CameraUpdateFactory.NewCameraPosition(camPos);
@@ -169,10 +183,8 @@ namespace BCC_Bridge.Android.Views
         {
             try
             {
-                var geo = new Geocoder(this);
-                var coords = geo.GetFromLocationName(name, 1);
+                var coords = GetCoordsFromName(name);
                 double latitude = coords[0].Latitude, longitude = coords[0].Longitude;
-
                 
                 SetCameraFromCoords(map, latitude, longitude);
             }
@@ -180,6 +192,14 @@ namespace BCC_Bridge.Android.Views
             {
                 Toast.MakeText(this, "Invalid Location", ToastLength.Short).Show();
             }
+        }
+
+        private IList<Address> GetCoordsFromName(string name)
+        {
+            var geo = new Geocoder(this);
+            var coords = geo.GetFromLocationName(name, 1);
+
+            return coords;
         }
 
         private void SetMyLocationMarker(GeoLocation location)
@@ -232,6 +252,24 @@ namespace BCC_Bridge.Android.Views
 
             placingBridgeMarkers = false;
             RunOnUiThread(() => Toast.MakeText(this, "Bridge Markers Loaded", ToastLength.Short).Show());
+        }
+
+        public string MakeDirectionURL(double originLatitude, double originLongitude, double destLatitude, double destLongitude)
+        {
+            StringBuilder url = new StringBuilder();
+            url.Append("http://maps.googleapis.com/maps/api/directions/json");
+            url.Append("?origin=");// from
+            url.Append(originLatitude);
+            url.Append(",");
+            url.Append(originLongitude);
+            url.Append("&destination=");// to
+            url.Append(destLatitude);
+            url.Append(",");
+            url.Append(destLongitude);
+            url.Append("&sensor=false&mode=driving&alternatives=true");
+            url.Append("&key=AIzaSyAtYVVEVhHpesj31u0VVRBjwUzC6Z25lms");
+
+            return url.ToString();
         }
     }
 }
