@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Android.App;
 using Android.Widget;
 using Android.OS;
@@ -10,14 +11,24 @@ using Android.Views.InputMethods;
 using MvvmCross.Droid.Views;
 using MvxSqlite.Services;
 using BCC_Bridge.Core;
+using BCC_Bridge.Core.ViewModels;
+using BCC_Bridge.Core.Models;
 using Android.Locations;
+using System.Net;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.Text;
+using System.Linq;
+using BCC_Bridge.Android.Maps;
 
 namespace BCC_Bridge.Android.Views
 {
-    [Activity(Label = "View for MapViewModel")]
+    [Activity(Label = "MapView")]
     public class MapView : MvxActivity, IOnMapReadyCallback
     {
-        GoogleMap gMap;
+        private delegate IOnMapReadyCallback OnMapReadyCallback();
+        private GoogleMap gMap;
+        MapViewModel mapViewModel;
         BridgeService bridgeService;
         List<Bridge> bridges;
         private int mapIndex = 1;
@@ -25,6 +36,11 @@ namespace BCC_Bridge.Android.Views
         private EditText addressInput;
         private EditText vInput;
         private Marker marker = null;
+        private double vehicleHeight;
+        private bool placingBridgeMarkers;
+        GeoLocation myGeoLocation;
+        WebClient webclient;
+        LatLng destination;
 
         enum MarkerType
         {
@@ -36,6 +52,7 @@ namespace BCC_Bridge.Android.Views
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
+
             SetContentView(Resource.Layout.MapView);
 
             string textColor = "#474342", hintColor = "#a99c98";
@@ -51,6 +68,9 @@ namespace BCC_Bridge.Android.Views
             vInput = FindViewById<EditText>(Resource.Id.vehicleInput);
             vInput.SetTextColor(Color.ParseColor(textColor));
             vInput.SetHintTextColor(Color.ParseColor(hintColor));
+            vInput.EditorAction += VehicleInput_EditorAction;
+            vehicleHeight = 4;
+            placingBridgeMarkers = false;
 
             bridgeService = new BridgeService();
             bridges = bridgeService.All();
@@ -58,11 +78,60 @@ namespace BCC_Bridge.Android.Views
             SetUpMap();
         }
 
+        private void SetUpMap()
+        {
+            mapViewModel = ViewModel as MapViewModel;
+            if (gMap == null)
+            {
+                var mapFragment = FragmentManager.FindFragmentById<MapFragment>(Resource.Id.map) as MapFragment;
+                mapFragment.GetMapAsync(this);
+            }
+        }
+
+        public void OnMapReady(GoogleMap googleMap)
+        {
+            mapViewModel.OnMapSetup(SetMyLocation, SetMyLocationMarker);
+            gMap = googleMap;
+            gMap.SetPadding(0, 114, 0, 0);
+            gMap.MyLocationEnabled = true;
+            gMap.MyLocationChange += Map_MyLocationChange;
+
+            ThreadPool.QueueUserWorkItem(o => SetBridgeMarkers(bridges, vehicleHeight));
+        }
+
+        private void Map_MyLocationChange(object sender, GoogleMap.MyLocationChangeEventArgs e)
+        {
+            gMap.MyLocationChange -= Map_MyLocationChange;
+            myGeoLocation = new GeoLocation(e.Location.Latitude, e.Location.Longitude);
+            SetMyLocation(myGeoLocation);
+            mapViewModel.OnMyLocationChanged(myGeoLocation);
+        }
+
         private void Address_EditorAction(object sender, EventArgs e)
         {
             SetCameraFromName(gMap, addressInput.Text);
 
             HideKeyboard(addressInput);
+        }
+
+        private void VehicleInput_EditorAction(object sender, EventArgs e)
+        {
+            HideKeyboard(vInput);
+
+            if (vInput.Text != "")
+            {
+                vehicleHeight = double.Parse(vInput.Text);
+
+                if (placingBridgeMarkers == true)
+                {
+                    Toast.MakeText(this, "Please wait for bridge markers to be placed before entering a new value", ToastLength.Short).Show();
+                }
+                else
+                {
+                    gMap.Clear();
+                    ThreadPool.QueueUserWorkItem(o => SetBridgeMarkers(bridges, vehicleHeight));
+                }
+            }
         }
 
         private void SwitchBtn_Click(object sender, EventArgs e)
@@ -81,19 +150,28 @@ namespace BCC_Bridge.Android.Views
             imm.HideSoftInputFromWindow(editText.WindowToken, 0);
         }
 
-        private void SetUpMap()
+        private void SetMyLocation(GeoLocation geoLocation, float zoom = 18)
         {
-            if (gMap == null)
-            {
-                FragmentManager.FindFragmentById<MapFragment>(Resource.Id.map).GetMapAsync(this);
-            }
+            CameraPosition.Builder camBuilder = CameraPosition.InvokeBuilder();
+            camBuilder.Target(GetMyLocation());
+            camBuilder.Zoom(zoom);
+
+            var cameraPosition = camBuilder.Build();
+            var cameraUpdate = CameraUpdateFactory.NewCameraPosition(cameraPosition);
+
+            gMap.AnimateCamera(cameraUpdate);
         }
 
-        private void SetCameraFromCoords(GoogleMap map, double latitude, double longitude)
+        private LatLng GetMyLocation()
+        {
+            return new LatLng(myGeoLocation.Latitude, myGeoLocation.Longitude);
+        }
+
+        private void SetCameraFromCoords(GoogleMap map, double latitude, double longitude, float zoom = 16)
         {
             var camBuilder = new CameraPosition.Builder()
                 .Target(new LatLng(latitude, longitude))
-                .Zoom(16);
+                .Zoom(zoom);
 
             var camPos = camBuilder.Build();
             var camUpdate = CameraUpdateFactory.NewCameraPosition(camPos);
@@ -105,13 +183,10 @@ namespace BCC_Bridge.Android.Views
         {
             try
             {
-                var geo = new Geocoder(this);
-                var coords = geo.GetFromLocationName(name, 1);
+                var coords = GetCoordsFromName(name);
                 double latitude = coords[0].Latitude, longitude = coords[0].Longitude;
-
                 
                 SetCameraFromCoords(map, latitude, longitude);
-                SetMarker(map, MarkerType.Normal, name, latitude, longitude, true);
             }
             catch
             {
@@ -119,7 +194,23 @@ namespace BCC_Bridge.Android.Views
             }
         }
 
-        private void SetMarker(GoogleMap map, MarkerType mt, string title, double latitude, double longitude, bool moveable)
+        private IList<Address> GetCoordsFromName(string name)
+        {
+            var geo = new Geocoder(this);
+            var coords = geo.GetFromLocationName(name, 1);
+
+            return coords;
+        }
+
+        private void SetMyLocationMarker(GeoLocation location)
+        {
+            /*var markerOptions = new MarkerOptions();
+            markerOptions.SetPosition(new LatLng(location.Latitude, location.Longitude));
+            markerOptions.SetTitle(location.Locality);
+            gMap.AddMarker(markerOptions);*/
+        }
+
+        private void SetMarker(MarkerType mt, string title, double latitude, double longitude, bool moveable)
         {
             var markerOptions = new MarkerOptions()
                 .SetPosition(new LatLng(latitude, longitude))
@@ -135,29 +226,50 @@ namespace BCC_Bridge.Android.Views
                 markerOptions.SetIcon(BitmapDescriptorFactory.FromResource(Resource.Drawable.bad_marker));
             }
 
-            marker = map.AddMarker(markerOptions);
+            marker = gMap.AddMarker(markerOptions);
         }
 
-        public void OnMapReady(GoogleMap googleMap)
+        private void SetBridgeMarkers(List<Bridge> bridges, double height)
         {
-            gMap = googleMap;
+            RunOnUiThread(() => Toast.MakeText(this, "Loading Bridge Markers...", ToastLength.Short).Show());
+            placingBridgeMarkers = true;
 
-            SetCameraFromName(gMap, "Queensland University of Technology");
-
-            /*MarkerType type;
-            for (int i = 0; i < bridges.Count; i++)
+            MarkerType type;
+            for (int i = 0; i < bridges.Count - 1; i++)
             {
-
-                if (bridges[i].Signed_Clearance < 4.0)
+                if (bridges[i].Signed_Clearance <= height)
                 {
                     type = MarkerType.Bad;
-                } else
+                }
+                else
                 {
                     type = MarkerType.Good;
                 }
 
-                SetMarker(gMap, type, bridges[i].Signed_Clearance.ToString(), bridges[i].Latitude, bridges[i].Longitude, false);
-            }*/
+                Thread.Sleep(10); // doesn't work without this... 
+                RunOnUiThread(() => SetMarker(type, bridges[i].Signed_Clearance.ToString(), bridges[i].Latitude, bridges[i].Longitude, false));
+            }
+
+            placingBridgeMarkers = false;
+            RunOnUiThread(() => Toast.MakeText(this, "Bridge Markers Loaded", ToastLength.Short).Show());
+        }
+
+        public string MakeDirectionURL(double originLatitude, double originLongitude, double destLatitude, double destLongitude)
+        {
+            StringBuilder url = new StringBuilder();
+            url.Append("http://maps.googleapis.com/maps/api/directions/json");
+            url.Append("?origin=");// from
+            url.Append(originLatitude);
+            url.Append(",");
+            url.Append(originLongitude);
+            url.Append("&destination=");// to
+            url.Append(destLatitude);
+            url.Append(",");
+            url.Append(destLongitude);
+            url.Append("&sensor=false&mode=driving&alternatives=true");
+            url.Append("&key=AIzaSyAtYVVEVhHpesj31u0VVRBjwUzC6Z25lms");
+
+            return url.ToString();
         }
     }
 }

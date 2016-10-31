@@ -2,6 +2,9 @@ using Android.Content;
 using MvvmCross.Droid.Platform;
 using MvvmCross.Core.ViewModels;
 using MvvmCross.Platform.Platform;
+using MvvmCross.Platform;
+using BCC_Bridge.Core.Interfaces;
+using BCC_Bridge.Android.Maps;
 
 namespace BCC_Bridge.Android
 {
@@ -19,6 +22,12 @@ namespace BCC_Bridge.Android
         protected override IMvxTrace CreateDebugTrace()
         {
             return new DebugTrace();
+        }
+
+        protected override void InitializeFirstChance()
+        {
+            Mvx.LazyConstructAndRegisterSingleton<IGeoCoder, GeoCoder>();
+            base.InitializeFirstChance();
         }
     }
 }

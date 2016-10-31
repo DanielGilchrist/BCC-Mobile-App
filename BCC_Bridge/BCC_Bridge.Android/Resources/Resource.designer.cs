@@ -2169,11 +2169,11 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f0b004c
 			public const int submenuarrow = 2131427404;
 			
-			// aapt resource value: 0x7f0b005d
-			public const int submit_area = 2131427421;
+			// aapt resource value: 0x7f080017
+			public const int btnLocation = 2131230743;
 			
-			// aapt resource value: 0x7f0b000d
-			public const int tabMode = 2131427341;
+			// aapt resource value: 0x7f080018
+			public const int btnSwitch = 2131230744;
 			
 			// aapt resource value: 0x7f0b0028
 			public const int terrain = 2131427368;
