@@ -12,12 +12,11 @@ namespace BCC_Bridge.Android
 	[Register("bcc_bridge.android.VehicleListFragment")]
 	public class VehicleListFragment : MvxFragment<VehicleListViewModel>
 	{
+		// Inflate the view associated with this fragment
 		public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 		{
 			var ignore = base.OnCreateView(inflater, container, savedInstanceState);
 			return this.BindingInflate(Resource.Layout.VehicleListView, null);
-
-			//return inflater.Inflate(Resource.Layout.VehicleListView, container, false);
 		}
 	}
 }
