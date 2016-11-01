@@ -34,6 +34,7 @@ namespace BCC_Bridge.Android.Views
         MapViewModel mapViewModel;
         BridgeService bridgeService;
         List<Bridge> bridges;
+        List<Bridge> badBridges;
         private int mapIndex = 1;
         private Button switchBtn;
         private EditText addressInput;
@@ -100,16 +101,12 @@ namespace BCC_Bridge.Android.Views
             gMap.MyLocationEnabled = true;
             gMap.MyLocationChange += Map_MyLocationChange;
 
-            try
+            ThreadPool.QueueUserWorkItem(o => SetBridgeMarkers(bridges, vehicleHeight));
+            while (placingBridgeMarkers == true)
             {
-                ProcessRoute(); // PLEASE FUCKING WORK
+                Thread.Sleep(1500);
             }
-            catch (Exception e)
-            {
-                Console.WriteLine("Process Route Exception: " + e.ToString());
-            }
-
-            //ThreadPool.QueueUserWorkItem(o => SetBridgeMarkers(bridges, vehicleHeight));
+            ThreadPool.QueueUserWorkItem(o => ProcessRoute());
         }
 
         private void Map_MyLocationChange(object sender, GoogleMap.MyLocationChangeEventArgs e)
@@ -141,8 +138,8 @@ namespace BCC_Bridge.Android.Views
                 }
                 else
                 {
-                    gMap.Clear();
                     ThreadPool.QueueUserWorkItem(o => SetBridgeMarkers(bridges, vehicleHeight));
+                    ThreadPool.QueueUserWorkItem(o => ProcessRoute());
                 }
             }
         }
@@ -244,8 +241,12 @@ namespace BCC_Bridge.Android.Views
 
         private void SetBridgeMarkers(List<Bridge> bridges, double height)
         {
+            RunOnUiThread(() => gMap.Clear());
+
             RunOnUiThread(() => Toast.MakeText(this, "Loading Bridge Markers...", ToastLength.Short).Show());
             placingBridgeMarkers = true;
+
+            badBridges = new List<Bridge>();
 
             MarkerType type;
             for (int i = 0; i < bridges.Count - 1; i++)
@@ -253,18 +254,20 @@ namespace BCC_Bridge.Android.Views
                 if (bridges[i].Signed_Clearance <= height)
                 {
                     type = MarkerType.Bad;
+                    badBridges.Add(bridges[i]);
                 }
                 else
                 {
                     type = MarkerType.Good;
                 }
 
-                Thread.Sleep(10); // doesn't work without this... 
+                Thread.Sleep(50); // doesn't work without this... 
                 RunOnUiThread(() => SetMarker(type, bridges[i].Signed_Clearance.ToString(), bridges[i].Latitude, bridges[i].Longitude, false));
             }
 
             placingBridgeMarkers = false;
             RunOnUiThread(() => Toast.MakeText(this, "Bridge Markers Loaded", ToastLength.Short).Show());
+            Console.WriteLine(string.Format("Bridges loaded!\n{0} bad bridges and {1} total bridges", badBridges.Count, bridges.Count));
         }
 
         public string MakeDirectionURL(double originLatitude, double originLongitude, double destLatitude, double destLongitude)
@@ -282,15 +285,20 @@ namespace BCC_Bridge.Android.Views
             url.Append("&mode=driving&alternatives=true");
             url.Append("&key=AIzaSyAtYVVEVhHpesj31u0VVRBjwUzC6Z25lms");
 
-            Console.WriteLine(string.Format("DESINATION URL: {0}", url.ToString()));
-
             return url.ToString();
         }
 
         private void ProcessRoute()
         {
-            var oAddress = GetCoordsFromName("Queensland University of Technology");
-            var dAddress = GetCoordsFromName("University of Queensland");
+            while (placingBridgeMarkers == true)
+            {
+                Thread.Sleep(1000);
+            }
+
+            Console.WriteLine("Number of bad bridges: " + badBridges.Count);
+
+            var oAddress = GetCoordsFromName("Bennett Street Brisbane");
+            var dAddress = GetCoordsFromName("Park Road Brisbane");
 
             double oLat = oAddress[0].Latitude, oLong = oAddress[0].Longitude;
             double dLat = dAddress[0].Latitude, dLong = dAddress[0].Longitude;
@@ -298,11 +306,13 @@ namespace BCC_Bridge.Android.Views
             origin = new LatLng(oLat, oLong);
             destination = new LatLng(dLat, dLong);
 
-            SetCameraFromCoords(gMap, origin.Latitude, origin.Longitude);
+            // SetCameraFromCoords(gMap, origin.Latitude, origin.Longitude);
+            RunOnUiThread(() => SetCameraFromCoords(gMap, origin.Latitude, origin.Longitude));
 
             if (origin != null && destination != null)
             {
-                DrawPath();
+                //DrawPath();
+                RunOnUiThread(() => DrawPath());
             }
         }
 
@@ -311,10 +321,8 @@ namespace BCC_Bridge.Android.Views
             string url = MakeDirectionURL(origin.Latitude, origin.Longitude, destination.Latitude, destination.Longitude);
             string DirectionJSONResponse = await DirectionHttpRequest(url);
 
-            Console.WriteLine("DirectionJSONResponse:\n" + DirectionJSONResponse);
-
             RunOnUiThread(() => {
-                gMap.Clear();
+                //gMap.Clear();
                 SetMarker(MarkerType.Normal, "Origin", origin.Latitude, origin.Longitude, false);
                 SetMarker(MarkerType.Normal, "Destination", destination.Latitude, destination.Longitude, false);
             });
@@ -325,27 +333,70 @@ namespace BCC_Bridge.Android.Views
         private void SetDirectionQuery(string response)
         {
             var routesObject = JsonConvert.DeserializeObject<GoogleDirection>(response);
-
+           
             if (routesObject.routes.Count > 0)
             {
-                string encodedPoints = routesObject.routes[0].overview_polyline.points;
+                var routes = routesObject.routes;
+                Console.WriteLine("Number of routes: " + routes.Count);
+
+                int routeIndex = 0;
+                while (routeIndex < routes.Count)
+                {
+
+                    bool isOkay = false;
+                    var legs = routes[routeIndex].legs;
+                    for (int i = 0; i < legs.Count; i++)
+                    {
+                        double startLat = legs[i].start_location.lat, startLong = legs[i].start_location.lng;
+                        double endLat = legs[i].end_location.lat, endLong = legs[i].end_location.lng;
+
+                        var boundBuilder = new LatLngBounds.Builder();
+                        boundBuilder.Include(new LatLng(startLat, startLong));
+                        boundBuilder.Include(new LatLng(endLat, endLong));
+
+                        var bound = boundBuilder.Build();
+
+                        foreach(var location in badBridges)
+                        {
+                            if (!(bound.Contains(new LatLng(location.Latitude, location.Longitude))))
+                            {
+                                isOkay = true;
+                            }
+                        }
+                    }
+
+                    if (isOkay == true)
+                    {
+                        break;
+                    }
+
+                    routeIndex++;
+                }
+
+                Console.WriteLine("Route Index: " + routeIndex);
+
+                string encodedPoints = routes[routeIndex].overview_polyline.points;
                 var decodedPoints = DecodePolyPoints(encodedPoints);
 
                 var points = new LatLng[decodedPoints.Count];
-                int i = 0;
+                int index = 0;
                 foreach(LatLng location in decodedPoints)
                 {
-                    points[i++] = new LatLng(location.Latitude, location.Longitude);
+                    points[index++] = new LatLng(location.Latitude, location.Longitude);
                 }
 
                 var polyOption = new PolylineOptions();
                 polyOption.InvokeColor(Color.Red);
-                polyOption.InvokeWidth(10);
+                polyOption.InvokeWidth(5);
                 polyOption.Geodesic(true);
                 polyOption.Visible(true);
                 polyOption.Add(points);
 
                 RunOnUiThread(() => gMap.AddPolyline(polyOption));
+            }
+            else
+            {
+                Toast.MakeText(this, "Unable to find acceptable route", ToastLength.Long).Show();
             }
         }
 
