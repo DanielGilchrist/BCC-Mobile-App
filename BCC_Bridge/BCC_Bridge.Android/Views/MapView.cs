@@ -20,6 +20,9 @@ using Newtonsoft.Json;
 using System.Text;
 using System.Linq;
 using BCC_Bridge.Android.Maps;
+using Android.Support.V4.Content;
+using Android;
+using Android.Content.PM;
 
 namespace BCC_Bridge.Android.Views
 {
@@ -40,6 +43,7 @@ namespace BCC_Bridge.Android.Views
         private bool placingBridgeMarkers;
         GeoLocation myGeoLocation;
         WebClient webclient;
+        LatLng origin;
         LatLng destination;
 
         enum MarkerType
@@ -96,7 +100,16 @@ namespace BCC_Bridge.Android.Views
             gMap.MyLocationEnabled = true;
             gMap.MyLocationChange += Map_MyLocationChange;
 
-            ThreadPool.QueueUserWorkItem(o => SetBridgeMarkers(bridges, vehicleHeight));
+            try
+            {
+                ProcessRoute(); // PLEASE FUCKING WORK
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Process Route Exception: " + e.ToString());
+            }
+
+            //ThreadPool.QueueUserWorkItem(o => SetBridgeMarkers(bridges, vehicleHeight));
         }
 
         private void Map_MyLocationChange(object sender, GoogleMap.MyLocationChangeEventArgs e)
@@ -257,7 +270,7 @@ namespace BCC_Bridge.Android.Views
         public string MakeDirectionURL(double originLatitude, double originLongitude, double destLatitude, double destLongitude)
         {
             StringBuilder url = new StringBuilder();
-            url.Append("http://maps.googleapis.com/maps/api/directions/json");
+            url.Append("https://maps.googleapis.com/maps/api/directions/json");
             url.Append("?origin=");// from
             url.Append(originLatitude);
             url.Append(",");
@@ -266,10 +279,160 @@ namespace BCC_Bridge.Android.Views
             url.Append(destLatitude);
             url.Append(",");
             url.Append(destLongitude);
-            url.Append("&sensor=false&mode=driving&alternatives=true");
+            url.Append("&mode=driving&alternatives=true");
             url.Append("&key=AIzaSyAtYVVEVhHpesj31u0VVRBjwUzC6Z25lms");
 
+            Console.WriteLine(string.Format("DESINATION URL: {0}", url.ToString()));
+
             return url.ToString();
+        }
+
+        private void ProcessRoute()
+        {
+            var oAddress = GetCoordsFromName("Queensland University of Technology");
+            var dAddress = GetCoordsFromName("University of Queensland");
+
+            double oLat = oAddress[0].Latitude, oLong = oAddress[0].Longitude;
+            double dLat = dAddress[0].Latitude, dLong = dAddress[0].Longitude;
+
+            origin = new LatLng(oLat, oLong);
+            destination = new LatLng(dLat, dLong);
+
+            SetCameraFromCoords(gMap, origin.Latitude, origin.Longitude);
+
+            if (origin != null && destination != null)
+            {
+                DrawPath();
+            }
+        }
+
+        private async void DrawPath()
+        {
+            string url = MakeDirectionURL(origin.Latitude, origin.Longitude, destination.Latitude, destination.Longitude);
+            string DirectionJSONResponse = await DirectionHttpRequest(url);
+
+            Console.WriteLine("DirectionJSONResponse:\n" + DirectionJSONResponse);
+
+            RunOnUiThread(() => {
+                gMap.Clear();
+                SetMarker(MarkerType.Normal, "Origin", origin.Latitude, origin.Longitude, false);
+                SetMarker(MarkerType.Normal, "Destination", destination.Latitude, destination.Longitude, false);
+            });
+
+            SetDirectionQuery(DirectionJSONResponse);
+        }
+
+        private void SetDirectionQuery(string response)
+        {
+            var routesObject = JsonConvert.DeserializeObject<GoogleDirection>(response);
+
+            if (routesObject.routes.Count > 0)
+            {
+                string encodedPoints = routesObject.routes[0].overview_polyline.points;
+                var decodedPoints = DecodePolyPoints(encodedPoints);
+
+                var points = new LatLng[decodedPoints.Count];
+                int i = 0;
+                foreach(LatLng location in decodedPoints)
+                {
+                    points[i++] = new LatLng(location.Latitude, location.Longitude);
+                }
+
+                var polyOption = new PolylineOptions();
+                polyOption.InvokeColor(Color.Red);
+                polyOption.InvokeWidth(10);
+                polyOption.Geodesic(true);
+                polyOption.Visible(true);
+                polyOption.Add(points);
+
+                RunOnUiThread(() => gMap.AddPolyline(polyOption));
+            }
+        }
+
+        private List<LatLng> DecodePolyPoints(string encodedPoints)
+        {
+            if (string.IsNullOrEmpty(encodedPoints)) { return null; }
+
+            var poly = new List<LatLng>();
+            char[] polyChars = encodedPoints.ToCharArray();
+            int index = 0;
+
+            int currentLat = 0;
+            int currentLng = 0;
+            int next5bits;
+            int sum;
+            int shifter;
+
+            try
+            {
+                while (index < polyChars.Length)
+                {
+                    // calculate next latitude
+                    sum = 0;
+                    shifter = 0;
+                    do
+                    {
+                        next5bits = (int)polyChars[index++] - 63;
+                        sum |= (next5bits & 31) << shifter;
+                        shifter += 5;
+                    } while (next5bits >= 32 && index < polyChars.Length);
+
+                    if (index >= polyChars.Length)
+                        break;
+
+                    currentLat += (sum & 1) == 1 ? ~(sum >> 1) : (sum >> 1);
+
+                    //calculate next longitude
+                    sum = 0;
+                    shifter = 0;
+                    do
+                    {
+                        next5bits = (int)polyChars[index++] - 63;
+                        sum |= (next5bits & 31) << shifter;
+                        shifter += 5;
+                    } while (next5bits >= 32 && index < polyChars.Length);
+
+                    if (index >= polyChars.Length && next5bits >= 32)
+                        break;
+
+                    currentLng += (sum & 1) == 1 ? ~(sum >> 1) : (sum >> 1);
+                    var p = new LatLng(Convert.ToDouble(currentLat) / 100000.0, 
+                                       Convert.ToDouble(currentLng) / 100000.0);
+                    poly.Add(p);
+                }
+            }
+            catch
+            {
+                RunOnUiThread(() =>
+                  Toast.MakeText(this, "Please wait...", ToastLength.Short).Show());
+            }
+            return poly;
+        }
+
+        async Task<string> DirectionHttpRequest(string url)
+        {
+            webclient = new WebClient();
+
+            string result;
+
+            try
+            {
+                result = await webclient.DownloadStringTaskAsync(new Uri(url));
+            }
+            catch (Exception e)
+            {
+                result = e.ToString();
+            }
+            finally
+            {
+                if (webclient != null)
+                {
+                    webclient.Dispose();
+                    webclient = null;
+                }
+            }
+
+            return result;
         }
     }
 }
