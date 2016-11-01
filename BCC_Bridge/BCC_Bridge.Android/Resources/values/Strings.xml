@@ -2,4 +2,6 @@
 <resources>
   <string name="app_name">BCC Bridge</string>
   <string name="google_maps_key">AIzaSyBwqVOMP3_wBbP4BH3pt-tzpYxzzKXb7EA</string>
+	<string name="OpenDrawerString">Open navigation drawer</string>
+	<string name="CloseDrawerString">Close navigation drawer</string>
 </resources>

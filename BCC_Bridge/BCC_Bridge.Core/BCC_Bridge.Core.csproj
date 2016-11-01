@@ -44,6 +44,7 @@
     <Compile Include="Services\BridgeService.cs" />
     <Compile Include="Models\Bridge.cs" />
     <Compile Include="Services\IBridgeService.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MvvmCross.Platform">
