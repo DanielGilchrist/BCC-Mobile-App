@@ -162,7 +162,7 @@
     <Compile Include="Bootstrap\SqlitePluginBootstrap.cs" />
     <Compile Include="Views\AddVehicleView.cs" />
     <Compile Include="MainActivity.cs" />
-    <Compile Include="Fragments\MapFragment.cs" />
+    <Compile Include="Fragments\MapViewFragment.cs" />
     <Compile Include="Fragments\VehicleListFragment.cs" />
     <Compile Include="SplashScreen.cs" />
     <Compile Include="DebugTrace.cs" />

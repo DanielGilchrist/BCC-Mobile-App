@@ -8,8 +8,8 @@ using MvvmCross.Droid.Support.V4;
 namespace BCC_Bridge.Android
 {
 	[MvxFragmentAttribute(typeof(MainViewModel), Resource.Id.frameLayout)]
-	[Register("bcc_bridge.android.MapFragment")]
-	public class MapFragment : MvxFragment<MapViewModel>
+	[Register("bcc_bridge.android.MapViewFragment")]
+	public class MapViewFragment : MvxFragment<MapViewModel>
 	{
 		public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 		{
