@@ -94,8 +94,16 @@ namespace BCC_Bridge.Android
 			base.OnCreate(savedInstanceState);
 		}
 
+		public override void OnDestroyView()
+		{
+			base.OnDestroyView();
+			var f = this.Activity.FragmentManager.FindFragmentById(Resource.Id.map) as MapFragment;
+			if (f != null)
+				this.Activity.FragmentManager.BeginTransaction().Remove(f).Commit();
+		}
+
         private void SetUpMap()
-        {
+		{
             mapViewModel = ViewModel as MapViewModel;
             if (gMap == null)
             {
