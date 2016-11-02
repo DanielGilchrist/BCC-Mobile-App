@@ -29,7 +29,7 @@ namespace BCC_Bridge.Android
 {
 	[MvxFragmentAttribute(typeof(MainViewModel), Resource.Id.frameLayout)]
 	[Register("bcc_bridge.android.MapViewFragment")]
-	public class MapViewFragment : MvxFragment<MapViewModel>
+	public class MapViewFragment : MvxFragment<MapViewModel>, IOnMapReadyCallback
 	{
         private delegate IOnMapReadyCallback OnMapReadyCallback();
         private GoogleMap gMap;
@@ -99,8 +99,8 @@ namespace BCC_Bridge.Android
             mapViewModel = ViewModel as MapViewModel;
             if (gMap == null)
             {
-                var mapFragment = FragmentManager.FindFragmentById<MapFragment>(Resource.Id.map) as MapFragment;
-                mapFragment.GetMapAsync(this);
+                var mapFragment = this.Activity.FragmentManager.FindFragmentById<MapFragment>(Resource.Id.map) as MapFragment;
+				mapFragment.GetMapAsync(this);
             }
         }
 
@@ -149,7 +149,7 @@ namespace BCC_Bridge.Android
 
                 if (placingBridgeMarkers == true)
                 {
-                    Toast.MakeText(this, "Please wait for bridge markers to be placed before entering a new value", ToastLength.Short).Show();
+					Toast.MakeText(this.Activity, "Please wait for bridge markers to be placed before entering a new value", ToastLength.Short).Show();
                 }
                 else
                 {
@@ -171,8 +171,8 @@ namespace BCC_Bridge.Android
 
         private void HideKeyboard(EditText editText)
         {
-            InputMethodManager imm = (InputMethodManager)GetSystemService(InputMethodService);
-            imm.HideSoftInputFromWindow(editText.WindowToken, 0);
+			//InputMethodManager imm = (InputMethodManager)GetSystemService(this.Activity.InputMethodService);
+   //         imm.HideSoftInputFromWindow(editText.WindowToken, 0);
         }
 
         private void SetMyLocation(GeoLocation geoLocation, float zoom = 18)
@@ -215,13 +215,13 @@ namespace BCC_Bridge.Android
             }
             catch
             {
-                Toast.MakeText(this, "Invalid Location", ToastLength.Short).Show();
+				Toast.MakeText(this.Activity, "Invalid Location", ToastLength.Short).Show();
             }
         }
 
         private IList<Address> GetCoordsFromName(string name)
         {
-            var geo = new Geocoder(this);
+			var geo = new Geocoder(this.Activity);
             var coords = geo.GetFromLocationName(name, 1);
 
             return coords;
@@ -256,7 +256,7 @@ namespace BCC_Bridge.Android
 
         private void SetBridgeMarkers(List<Bridge> bridges, double height)
         {
-            RunOnUiThread(() => Toast.MakeText(this, "Loading Bridge Markers...", ToastLength.Short).Show());
+			this.Activity.RunOnUiThread(() => Toast.MakeText(this.Activity, "Loading Bridge Markers...", ToastLength.Short).Show());
             placingBridgeMarkers = true;
 
             MarkerType type;
@@ -272,11 +272,11 @@ namespace BCC_Bridge.Android
                 }
 
                 Thread.Sleep(10); // doesn't work without this... 
-                RunOnUiThread(() => SetMarker(type, bridges[i].Signed_Clearance.ToString(), bridges[i].Latitude, bridges[i].Longitude, false));
+                this.Activity.RunOnUiThread(() => SetMarker(type, bridges[i].Signed_Clearance.ToString(), bridges[i].Latitude, bridges[i].Longitude, false));
             }
 
             placingBridgeMarkers = false;
-            RunOnUiThread(() => Toast.MakeText(this, "Bridge Markers Loaded", ToastLength.Short).Show());
+            this.Activity.RunOnUiThread(() => Toast.MakeText(this.Activity, "Bridge Markers Loaded", ToastLength.Short).Show());
         }
 
         public string MakeDirectionURL(double originLatitude, double originLongitude, double destLatitude, double destLongitude)
@@ -325,7 +325,7 @@ namespace BCC_Bridge.Android
 
             Console.WriteLine("DirectionJSONResponse:\n" + DirectionJSONResponse);
 
-            RunOnUiThread(() => {
+            this.Activity.RunOnUiThread(() => {
                 gMap.Clear();
                 SetMarker(MarkerType.Normal, "Origin", origin.Latitude, origin.Longitude, false);
                 SetMarker(MarkerType.Normal, "Destination", destination.Latitude, destination.Longitude, false);
@@ -357,7 +357,7 @@ namespace BCC_Bridge.Android
                 polyOption.Visible(true);
                 polyOption.Add(points);
 
-                RunOnUiThread(() => gMap.AddPolyline(polyOption));
+                this.Activity.RunOnUiThread(() => gMap.AddPolyline(polyOption));
             }
         }
 
@@ -415,8 +415,8 @@ namespace BCC_Bridge.Android
             }
             catch
             {
-                RunOnUiThread(() =>
-                  Toast.MakeText(this, "Please wait...", ToastLength.Short).Show());
+                this.Activity.RunOnUiThread(() =>
+                  Toast.MakeText(this.Activity, "Please wait...", ToastLength.Short).Show());
             }
             return poly;
         }
