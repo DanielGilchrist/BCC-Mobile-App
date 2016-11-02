@@ -31,6 +31,7 @@ namespace BCC_Bridge.Android
 			var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
 			SetSupportActionBar(toolbar);
 
+
 			SupportActionBar.SetDisplayHomeAsUpEnabled(true);
 
 			_drawerListView = FindViewById<ListView>(Resource.Id.drawerListView);

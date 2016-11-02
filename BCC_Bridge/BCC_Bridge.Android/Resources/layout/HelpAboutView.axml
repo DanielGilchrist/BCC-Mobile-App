@@ -5,10 +5,22 @@
     android:layout_height="match_parent"
     android:minWidth="25px"
     android:minHeight="25px">
-    <TextView
-        android:text="Help and about view"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+    <ScrollView
+        android:id="@+id/SCROLLER_ID"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView1" />
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:fillViewport="true">
+        <TextView
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="40dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:gravity="center"
+            android:lineSpacingExtra="5dp"
+            android:text="“BCC Bridge” aims to consume the task of monitoring the height of a bridge in comparison to the height of a vehicle to prevent a collision.  The application inherits a “prevention before cure” attitude as it displays the height of all bridges across Brisbane so that the user is aware of the overhanging height in comparison to their vehicle. As the user approaches the vehicle, they will receive a reminder to enter additional height information (carriage on top) if needed through the implementation of beacon technology.  The simplistic user interface is to be used by any truck driver, rental user or otherwise to get them from A to B without any overhead collisions.  A version 2 will be released at a later date implementing the feature of route calculation, allowing the user to follow a designated route which avoids all bridges lower than their vehicle."
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/textView1" />
+    </ScrollView>
 </LinearLayout>

@@ -14,6 +14,8 @@ namespace BCC_Bridge.Core.ViewModels
 
 		public IEnumerable<string> MenuItems { get; private set; } = new[] {"Map", "Vehicles", "Help / About" };
 
+
+
 		public void ShowDefaultMenuItem()
 		{
 			NavigateTo(0);
