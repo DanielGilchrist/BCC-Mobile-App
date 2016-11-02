@@ -26,6 +26,7 @@ using MvvmCross.Binding.Droid.BindingContext;
 using Android;
 using Android.Content.PM;
 using Android.Support.V4.App;
+using Android.Text;
 
 namespace BCC_Bridge.Android
 {
@@ -41,7 +42,7 @@ namespace BCC_Bridge.Android
         List<Bridge> badBridges;
         private int mapIndex = 1;
         private Button switchBtn;
-        private EditText addressInput;
+        private AutoCompleteTextView addressInput;
         private EditText vInput;
         private Marker marker = null;
         private double vehicleHeight;
@@ -53,6 +54,14 @@ namespace BCC_Bridge.Android
         readonly string[] PermissionsLocation = { Manifest.Permission.AccessCoarseLocation, Manifest.Permission.AccessFineLocation };
         const int RequestLocationId = 0;
         bool permissionsGranted = false;
+
+        const string autoCompleteGoogleApi = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=";
+        const string googleApiKey = "AIzaSyAtYVVEVhHpesj31u0VVRBjwUzC6Z25lms";
+        ArrayAdapter adapter = null;
+        GoogleMapPlaceClass objMapClass;
+        string autoCompleteOptions;
+        string[] predictiveText;
+        int index = 0;
 
         enum MarkerType
         {
@@ -75,11 +84,41 @@ namespace BCC_Bridge.Android
 
             switchBtn = v.FindViewById<Button>(Resource.Id.btnSwitch);
 			switchBtn.Click += SwitchBtn_Click;
-
-            addressInput = v.FindViewById<EditText>(Resource.Id.addressInput);
+            
+            addressInput = v.FindViewById<AutoCompleteTextView>(Resource.Id.addressInput);
             addressInput.SetTextColor(Color.ParseColor(textColor));
             addressInput.SetHintTextColor(Color.ParseColor(hintColor));
-            addressInput.EditorAction += Address_EditorAction;
+            addressInput.ItemClick += AutoCompleteOption_Click;
+            addressInput.Click += AddressInput_Click;
+
+            addressInput.TextChanged += async delegate (object sender, TextChangedEventArgs e)
+            {
+                try
+                {
+                    autoCompleteOptions = await DownloadString(autoCompleteGoogleApi + addressInput.Text + "&key=" + googleApiKey);
+
+                    if (autoCompleteOptions == "Exception")
+                    {
+                        Toast.MakeText(this.Activity, "Unable to connect", ToastLength.Short).Show();
+                        return;
+                    }
+                    objMapClass = JsonConvert.DeserializeObject<GoogleMapPlaceClass>(autoCompleteOptions);
+                    predictiveText = new string[objMapClass.predictions.Count];
+                    index = 0;
+                    foreach (Prediction objPred in objMapClass.predictions)
+                    {
+                        predictiveText[index] = objPred.description;
+                        index++;
+                    }
+                    adapter = new ArrayAdapter<string>(this.Activity, global::Android.Resource.Layout.SimpleDropDownItem1Line, predictiveText);
+                    addressInput.Adapter = adapter;
+                }
+                catch
+                {
+                    Toast.MakeText(this.Activity, "Unable to process", ToastLength.Short).Show();
+                }
+
+            };
 
             vInput = v.FindViewById<EditText>(Resource.Id.vehicleInput);
             vInput.SetTextColor(Color.ParseColor(textColor));
@@ -141,15 +180,26 @@ namespace BCC_Bridge.Android
             mapViewModel.OnMyLocationChanged(myGeoLocation);
         }
 
-        private void Address_EditorAction(object sender, EventArgs e)
+        private void AutoCompleteOption_Click(object sender, AdapterView.ItemClickEventArgs e)
         {
-            var destCoords = GetCoordsFromName(addressInput.Text);
-            double destLat = destCoords[0].Latitude, destLong = destCoords[0].Longitude;
+            // hide keyboard for autocomplete
+            InputMethodManager inputManager = (InputMethodManager)this.Activity.GetSystemService(global::Android.Content.Context.InputMethodService);
+            inputManager.HideSoftInputFromWindow(addressInput.WindowToken, HideSoftInputFlags.NotAlways);
 
-            destination = new LatLng(destLat, destLong);
-            ThreadPool.QueueUserWorkItem(o => SetBridgeMarkers(bridges, vehicleHeight));
+            if (addressInput.Text != string.Empty)
+            {
+                var destCoords = GetCoordsFromName(addressInput.Text);
+                double destLat = destCoords[0].Latitude, destLong = destCoords[0].Longitude;
 
-            HideKeyboard(addressInput);
+                destination = new LatLng(destLat, destLong);
+                ThreadPool.QueueUserWorkItem(o => SetBridgeMarkers(bridges, vehicleHeight));
+            }
+
+        }
+
+        private void AddressInput_Click(object sender, EventArgs e)
+        {
+            addressInput.Text = "";
         }
 
         private void VehicleInput_EditorAction(object sender, EventArgs e)
@@ -458,7 +508,7 @@ namespace BCC_Bridge.Android
             RequestPermissions(PermissionsLocation, RequestLocationId);
         }
 
-        public void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
         {
             switch (requestCode)
             {
@@ -481,6 +531,31 @@ namespace BCC_Bridge.Android
             }
         }
 
-        
+        async Task<string> DownloadString(string strUri)
+        {
+            Console.WriteLine(strUri);
+            WebClient webclient = new WebClient();
+            string strResultData;
+            try
+            {
+                strResultData = await webclient.DownloadStringTaskAsync(new Uri(strUri));
+                Console.WriteLine(strResultData);
+            }
+            catch
+            {
+                strResultData = "Exception";
+                this.Activity.RunOnUiThread(() =>
+                {
+                    Toast.MakeText(this.Activity, "Unable to connect", ToastLength.Short).Show();
+                });
+            }
+            finally
+            {
+                webclient.Dispose();
+                webclient = null;
+            }
+
+            return strResultData;
+        }
     }
 }

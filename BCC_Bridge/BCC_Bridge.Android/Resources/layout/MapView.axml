@@ -14,7 +14,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_margin="5dp">
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/addressInput"
                 android:layout_centerVertical="true"
                 android:layout_width="fill_parent"
@@ -29,7 +29,7 @@
                 android:inputType="textCapSentences|textAutoCorrect"
                 android:imeOptions="actionSearch"
                 android:singleLine="true"
-                android:background="@drawable/MapStyles" />
+                android:background="@drawable/MapStyles" />-->
             <EditText
                 android:id="@+id/vehicleInput"
                 android:layout_marginLeft="100dp"
