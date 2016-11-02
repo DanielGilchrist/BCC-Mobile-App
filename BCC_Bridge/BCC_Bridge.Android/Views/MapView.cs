@@ -276,17 +276,6 @@ namespace BCC_Bridge.Android.Views
         public string MakeDirectionURL(double originLatitude, double originLongitude, double destLatitude, double destLongitude)
         {
             StringBuilder url = new StringBuilder();
-            /*url.Append("https://maps.googleapis.com/maps/api/directions/json");
-            url.Append("?origin=");// from
-            url.Append(originLatitude);
-            url.Append(",");
-            url.Append(originLongitude);
-            url.Append("&destination=");// to
-            url.Append(destLatitude);
-            url.Append(",");
-            url.Append(destLongitude);
-            url.Append("&mode=driving&alternatives=true");
-            url.Append("&key=AIzaSyAtYVVEVhHpesj31u0VVRBjwUzC6Z25lms");*/
 
             url.Append("http://route.cit.api.here.com/routing/7.2/calculateroute.json");
             url.Append("?app_id=YueFlTt5s8iXeXb0VZPx");
@@ -294,20 +283,45 @@ namespace BCC_Bridge.Android.Views
             url.AppendFormat("&waypoint0=geo!{0},{1}", originLatitude, originLongitude);
             url.AppendFormat("&waypoint1=geo!{0},{1}", destLatitude, destLongitude);
             url.Append("&mode=fastest;truck;traffic:disabled");
-            //url.Append("&avoidareas=");
+            url.Append("&avoidareas=");
 
-            Console.WriteLine(url.ToString());
+            var boundsBuilder = new LatLngBounds.Builder();
+            boundsBuilder.Include(origin);
+            boundsBuilder.Include(destination);
+            var bounds = boundsBuilder.Build();
+            
+            var badBridgesOnRoute = new List<Bridge>();
+
+            for (int i = 0; i < badBridges.Count; i++)
+            {
+                if (bounds.Contains(new LatLng(badBridges[i].Latitude, badBridges[i].Longitude)))
+                {
+                    badBridgesOnRoute.Add(badBridges[i]);
+                }
+            }
+
+            Console.WriteLine("badBridgesOnRoute: " + badBridgesOnRoute.Count);
+
+            double variant = 0.001;
+            for (int i = 0; i < badBridgesOnRoute.Count; i++)
+            {
+                if (badBridgesOnRoute.Count < 20)
+                {
+                    url.AppendFormat("{0},{1};{2},{3}!", badBridgesOnRoute[i].Latitude + variant, badBridgesOnRoute[i].Longitude + variant,
+                                                     badBridgesOnRoute[i].Latitude - variant, badBridgesOnRoute[i].Longitude - variant);
+                }
+            }
+            url.Length--;
 
             return url.ToString();
         }
 
         private void ProcessRoute()
         {
-            var oAddress = GetCoordsFromName("Queensland University of Technology");
-            //var oAddress = GetMyLocation();
+            var oAddress = GetMyLocation();
             var dAddress = destination;
 
-            double oLat = oAddress[0].Latitude, oLong = oAddress[0].Longitude;
+            double oLat = oAddress.Latitude, oLong = oAddress.Longitude;
             double dLat = dAddress.Latitude, dLong = dAddress.Longitude;
 
             origin = new LatLng(oLat, oLong);
@@ -337,163 +351,37 @@ namespace BCC_Bridge.Android.Views
         private void SetDirectionQuery(string response)
         {
             var routesObject = JsonConvert.DeserializeObject<HereJSONResponse>(response).response;
-           
+
+            Console.WriteLine("Number of routes: " + routesObject.route.Count);
+
             if (routesObject.route.Count > 0)
             {
                 var routes = routesObject.route;
+                var points = new LatLng[routes[0].leg[0].maneuver.Count];
 
-                bool isOkay = false;
-               /* Console.WriteLine("Number of routes: " + routes.Count);
 
-                int routeIndex = 0;
-                bool isOkay = false;
-                while (routeIndex < routes.Count)
+                for (int i = 0; i < routes[0].leg[0].maneuver.Count; i++)
                 {
-                    
-                    var legs = routes[routeIndex].leg;
-                    for (int i = 0; i < legs.Count; i++)
-                    {
-                        double startLat = legs[i].start_location.lat, startLong = legs[i].start_location.lng;
-                        double endLat = legs[i].end_location.lat, endLong = legs[i].end_location.lng;
-
-                        var boundBuilder = new LatLngBounds.Builder();
-                        boundBuilder.Include(new LatLng(routes[routeIndex].bounds.northeast.lat, 
-                                                        routes[routeIndex].bounds.northeast.lng));
-                        boundBuilder.Include(new LatLng(routes[routeIndex].bounds.southwest.lat,
-                                                        routes[routeIndex].bounds.southwest.lng));
-
-                        //var bound = boundBuilder.Build();
-
-                        foreach(var location in badBridges)
-                        {
-                            if (!(bound.Contains(new LatLng(location.Latitude, location.Longitude))))
-                            {
-                                isOkay = true;
-                            }
-
-                            // check if bridge is on leg or route
-                            if(Math.Abs((endLat - startLat) * (location.Longitude - startLong) - (endLong - startLong) * (location.Latitude - startLat)) < 1)
-                            {
-                                isOkay = true;
-                            }
-                        }
-                    }
-
-                    if (isOkay == true)
-                    {
-                        Console.WriteLine("Broke from loop with routeIndex = " + routeIndex);
-                        break;
-                    }
-
-                    routeIndex++;
-                }*/
-
-                /*if (routeIndex >= routes.Count)
-                {
-                    routeIndex--;
+                    points[i] = new LatLng(routes[0].leg[0].maneuver[i].position.latitude, routes[0].leg[0].maneuver[i].position.longitude);
                 }
 
-                Console.WriteLine("Route Index: " + routeIndex); */
-
-                if (isOkay == true)
+                Console.WriteLine("points:");
+                for (int i = 0; i < points.Length; i++)
                 {
-                    Toast.MakeText(this, "Unable to find acceptable route", ToastLength.Long).Show();
-                }
-                else
-                {
-                    //string encodedPoints = routes[0].overview_polyline.points;
-                    //var decodedPoints = DecodePolyPoints(encodedPoints);
-
-                    var points = new LatLng[routes[0].waypoint.Count];
-
-
-                    for (int i = 0; i < routes[0].waypoint.Count; i++)
-                    {
-                        points[i] = new LatLng(routes[0].waypoint[i].mappedPosition.latitude, routes[0].waypoint[i].mappedPosition.latitude);
-                    }
-
-                    /*int index = 0;
-                    foreach (LatLng location in decodedPoints)
-                    {
-                        points[index++] = new LatLng(location.Latitude, location.Longitude);
-                    }*/
-
-                    var polyOption = new PolylineOptions();
-                    polyOption.InvokeColor(Color.Red);
-                    polyOption.InvokeWidth(5);
-                    polyOption.Geodesic(true);
-                    polyOption.Visible(true);
-                    polyOption.Add(points);
-
-                    RunOnUiThread(() => gMap.AddPolyline(polyOption));
+                    Console.WriteLine(string.Format("{0}: lat={1}, lng={2}", i, points[i].Latitude, points[i].Longitude));
                 }
 
-                
+                var polyOption = new PolylineOptions();
+                polyOption.InvokeColor(Color.Yellow);
+                polyOption.InvokeWidth(5);
+                polyOption.Add(points);
+
+                RunOnUiThread(() => gMap.AddPolyline(polyOption));
             }
             else
             {
-                Toast.MakeText(this, "Unable to find acceptable route", ToastLength.Long).Show();
+                Toast.MakeText(this, "No route returned", ToastLength.Long).Show();
             }
-        }
-
-        private List<LatLng> DecodePolyPoints(string encodedPoints)
-        {
-            if (string.IsNullOrEmpty(encodedPoints)) { return null; }
-
-            var poly = new List<LatLng>();
-            char[] polyChars = encodedPoints.ToCharArray();
-            int index = 0;
-
-            int currentLat = 0;
-            int currentLng = 0;
-            int next5bits;
-            int sum;
-            int shifter;
-
-            try
-            {
-                while (index < polyChars.Length)
-                {
-                    // calculate next latitude
-                    sum = 0;
-                    shifter = 0;
-                    do
-                    {
-                        next5bits = (int)polyChars[index++] - 63;
-                        sum |= (next5bits & 31) << shifter;
-                        shifter += 5;
-                    } while (next5bits >= 32 && index < polyChars.Length);
-
-                    if (index >= polyChars.Length)
-                        break;
-
-                    currentLat += (sum & 1) == 1 ? ~(sum >> 1) : (sum >> 1);
-
-                    //calculate next longitude
-                    sum = 0;
-                    shifter = 0;
-                    do
-                    {
-                        next5bits = (int)polyChars[index++] - 63;
-                        sum |= (next5bits & 31) << shifter;
-                        shifter += 5;
-                    } while (next5bits >= 32 && index < polyChars.Length);
-
-                    if (index >= polyChars.Length && next5bits >= 32)
-                        break;
-
-                    currentLng += (sum & 1) == 1 ? ~(sum >> 1) : (sum >> 1);
-                    var p = new LatLng(Convert.ToDouble(currentLat) / 100000.0, 
-                                       Convert.ToDouble(currentLng) / 100000.0);
-                    poly.Add(p);
-                }
-            }
-            catch
-            {
-                RunOnUiThread(() =>
-                  Toast.MakeText(this, "Please wait...", ToastLength.Short).Show());
-            }
-            return poly;
         }
 
         async Task<string> DirectionHttpRequest(string url)
