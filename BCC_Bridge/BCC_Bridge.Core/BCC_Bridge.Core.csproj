@@ -33,7 +33,6 @@
     <Compile Include="Interfaces\IGeoCoder.cs" />
     <Compile Include="Models\GeoLocation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModels\FirstViewModel.cs" />
     <Compile Include="App.cs" />
     <Compile Include="ViewModels\MapViewModel.cs" />
     <Compile Include="ViewModels\VehicleListViewModel.cs" />
