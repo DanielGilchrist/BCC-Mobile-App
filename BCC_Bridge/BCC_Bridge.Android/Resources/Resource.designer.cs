@@ -1893,8 +1893,8 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f0b0063
 			public const int SCROLLER_ID = 2131427427;
 			
-			// aapt resource value: 0x7f0b006d
-			public const int action0 = 2131427437;
+			// aapt resource value: 0x7f0b006e
+			public const int action0 = 2131427438;
 			
 			// aapt resource value: 0x7f0b0052
 			public const int action_bar = 2131427410;
@@ -1920,8 +1920,8 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f0b0053
 			public const int action_context_bar = 2131427411;
 			
-			// aapt resource value: 0x7f0b0071
-			public const int action_divider = 2131427441;
+			// aapt resource value: 0x7f0b0072
+			public const int action_divider = 2131427442;
 			
 			// aapt resource value: 0x7f0b0002
 			public const int action_menu_divider = 2131427330;
@@ -1944,8 +1944,8 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f0b0015
 			public const int add = 2131427349;
 			
-			// aapt resource value: 0x7f0b006a
-			public const int addressInput = 2131427434;
+			// aapt resource value: 0x7f0b006b
+			public const int addressInput = 2131427435;
 			
 			// aapt resource value: 0x7f0b0029
 			public const int adjust_height = 2131427369;
@@ -1968,20 +1968,20 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f0b0024
 			public const int bottom = 2131427364;
 			
-			// aapt resource value: 0x7f0b006c
-			public const int btnSwitch = 2131427436;
+			// aapt resource value: 0x7f0b006d
+			public const int btnSwitch = 2131427437;
 			
 			// aapt resource value: 0x7f0b003b
 			public const int buttonPanel = 2131427387;
 			
-			// aapt resource value: 0x7f0b006e
-			public const int cancel_action = 2131427438;
+			// aapt resource value: 0x7f0b006f
+			public const int cancel_action = 2131427439;
 			
 			// aapt resource value: 0x7f0b0049
 			public const int checkbox = 2131427401;
 			
-			// aapt resource value: 0x7f0b0074
-			public const int chronometer = 2131427444;
+			// aapt resource value: 0x7f0b0075
+			public const int chronometer = 2131427445;
 			
 			// aapt resource value: 0x7f0b0020
 			public const int collapseActionView = 2131427360;
@@ -2007,11 +2007,11 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f0b000e
 			public const int disableHome = 2131427342;
 			
-			// aapt resource value: 0x7f0b0066
-			public const int drawerLayout = 2131427430;
+			// aapt resource value: 0x7f0b0067
+			public const int drawerLayout = 2131427431;
 			
-			// aapt resource value: 0x7f0b0068
-			public const int drawerListView = 2131427432;
+			// aapt resource value: 0x7f0b0069
+			public const int drawerListView = 2131427433;
 			
 			// aapt resource value: 0x7f0b0054
 			public const int edit_query = 2131427412;
@@ -2019,8 +2019,8 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f0b001d
 			public const int end = 2131427357;
 			
-			// aapt resource value: 0x7f0b0079
-			public const int end_padder = 2131427449;
+			// aapt resource value: 0x7f0b007a
+			public const int end_padder = 2131427450;
 			
 			// aapt resource value: 0x7f0b0035
 			public const int expand_activities_button = 2131427381;
@@ -2028,8 +2028,8 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f0b0048
 			public const int expanded_menu = 2131427400;
 			
-			// aapt resource value: 0x7f0b0067
-			public const int frameLayout = 2131427431;
+			// aapt resource value: 0x7f0b0068
+			public const int frameLayout = 2131427432;
 			
 			// aapt resource value: 0x7f0b0004
 			public const int home = 2131427332;
@@ -2052,17 +2052,17 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f0b0036
 			public const int image = 2131427382;
 			
-			// aapt resource value: 0x7f0b0078
-			public const int info = 2131427448;
+			// aapt resource value: 0x7f0b0079
+			public const int info = 2131427449;
 			
 			// aapt resource value: 0x7f0b0030
 			public const int light = 2131427376;
 			
-			// aapt resource value: 0x7f0b0072
-			public const int line1 = 2131427442;
+			// aapt resource value: 0x7f0b0073
+			public const int line1 = 2131427443;
 			
-			// aapt resource value: 0x7f0b0076
-			public const int line3 = 2131427446;
+			// aapt resource value: 0x7f0b0077
+			public const int line3 = 2131427447;
 			
 			// aapt resource value: 0x7f0b000b
 			public const int listMode = 2131427339;
@@ -2070,11 +2070,11 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f0b0038
 			public const int list_item = 2131427384;
 			
-			// aapt resource value: 0x7f0b0069
-			public const int map = 2131427433;
+			// aapt resource value: 0x7f0b006a
+			public const int map = 2131427434;
 			
-			// aapt resource value: 0x7f0b0070
-			public const int media_actions = 2131427440;
+			// aapt resource value: 0x7f0b0071
+			public const int media_actions = 2131427441;
 			
 			// aapt resource value: 0x7f0b001e
 			public const int middle = 2131427358;
@@ -2181,8 +2181,8 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f0b002c
 			public const int standard = 2131427372;
 			
-			// aapt resource value: 0x7f0b006f
-			public const int status_bar_latest_event_content = 2131427439;
+			// aapt resource value: 0x7f0b0070
+			public const int status_bar_latest_event_content = 2131427440;
 			
 			// aapt resource value: 0x7f0b004c
 			public const int submenuarrow = 2131427404;
@@ -2196,11 +2196,11 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f0b0028
 			public const int terrain = 2131427368;
 			
-			// aapt resource value: 0x7f0b0077
-			public const int text = 2131427447;
+			// aapt resource value: 0x7f0b0078
+			public const int text = 2131427448;
 			
-			// aapt resource value: 0x7f0b0075
-			public const int text2 = 2131427445;
+			// aapt resource value: 0x7f0b0076
+			public const int text2 = 2131427446;
 			
 			// aapt resource value: 0x7f0b0044
 			public const int textSpacerNoButtons = 2131427396;
@@ -2211,8 +2211,8 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f0b0062
 			public const int textView2 = 2131427426;
 			
-			// aapt resource value: 0x7f0b0073
-			public const int time = 2131427443;
+			// aapt resource value: 0x7f0b0074
+			public const int time = 2131427444;
 			
 			// aapt resource value: 0x7f0b003a
 			public const int title = 2131427386;
@@ -2220,8 +2220,8 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f0b003f
 			public const int title_template = 2131427391;
 			
-			// aapt resource value: 0x7f0b0065
-			public const int toolbar = 2131427429;
+			// aapt resource value: 0x7f0b0066
+			public const int toolbar = 2131427430;
 			
 			// aapt resource value: 0x7f0b0025
 			public const int top = 2131427365;
@@ -2229,8 +2229,8 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f0b003e
 			public const int topPanel = 2131427390;
 			
-			// aapt resource value: 0x7f0b0064
-			public const int top_parent = 2131427428;
+			// aapt resource value: 0x7f0b0065
+			public const int top_parent = 2131427429;
 			
 			// aapt resource value: 0x7f0b0008
 			public const int up = 2131427336;
@@ -2238,8 +2238,11 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f0b0014
 			public const int useLogo = 2131427348;
 			
-			// aapt resource value: 0x7f0b006b
-			public const int vehicleInput = 2131427435;
+			// aapt resource value: 0x7f0b006c
+			public const int vehicleInput = 2131427436;
+			
+			// aapt resource value: 0x7f0b0064
+			public const int vehicleName = 2131427428;
 			
 			// aapt resource value: 0x7f0b002d
 			public const int wide = 2131427373;
