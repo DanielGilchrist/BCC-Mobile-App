@@ -3,9 +3,19 @@
     xmlns:local="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="8dp">
     <TextView
-        android:layout_width="fill_parent"
+        android:id="@+id/vehicleName"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        local:MvxBind="Text Name" />
+        local:MvxBind="Text Name"
+        android:textSize="@dimen/abc_text_size_headline_material" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/vehicleName"
+        android:layout_alignStart="@id/vehicleName"
+        local:MvxBind="Text Height"
+        android:textSize="@dimen/abc_text_size_medium_material" />
 </LinearLayout>
