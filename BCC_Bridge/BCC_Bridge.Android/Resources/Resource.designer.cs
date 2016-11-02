@@ -2367,10 +2367,10 @@ namespace BCC_Bridge.Android
 			public const int AddVehicleView = 2130968602;
 			
 			// aapt resource value: 0x7f04001b
-			public const int DummyMapView = 2130968603;
+			public const int FirstView = 2130968603;
 			
 			// aapt resource value: 0x7f04001c
-			public const int FirstView = 2130968604;
+			public const int HelpAboutView = 2130968604;
 			
 			// aapt resource value: 0x7f04001d
 			public const int ListItem_Vehicle = 2130968605;
@@ -2455,17 +2455,17 @@ namespace BCC_Bridge.Android
 		public partial class String
 		{
 			
+			// aapt resource value: 0x7f060042
+			public const int ApplicationName = 2131099714;
+			
+			// aapt resource value: 0x7f060046
+			public const int CloseDrawerString = 2131099718;
+			
 			// aapt resource value: 0x7f060041
-			public const int ApplicationName = 2131099713;
+			public const int Hello = 2131099713;
 			
 			// aapt resource value: 0x7f060045
-			public const int CloseDrawerString = 2131099717;
-			
-			// aapt resource value: 0x7f060040
-			public const int Hello = 2131099712;
-			
-			// aapt resource value: 0x7f060044
-			public const int OpenDrawerString = 2131099716;
+			public const int OpenDrawerString = 2131099717;
 			
 			// aapt resource value: 0x7f060000
 			public const int abc_action_bar_home_description = 2131099648;
@@ -2560,8 +2560,8 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f060012
 			public const int abc_toolbar_collapse_description = 2131099666;
 			
-			// aapt resource value: 0x7f060042
-			public const int app_name = 2131099714;
+			// aapt resource value: 0x7f060043
+			public const int app_name = 2131099715;
 			
 			// aapt resource value: 0x7f060022
 			public const int auth_google_play_services_client_facebook_display_name = 2131099682;
@@ -2656,8 +2656,11 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f06003f
 			public const int common_signin_button_text_long = 2131099711;
 			
-			// aapt resource value: 0x7f060043
-			public const int google_maps_key = 2131099715;
+			// aapt resource value: 0x7f060044
+			public const int google_maps_key = 2131099716;
+			
+			// aapt resource value: 0x7f060040
+			public const int library_name = 2131099712;
 			
 			// aapt resource value: 0x7f060013
 			public const int search_menu_title = 2131099667;
