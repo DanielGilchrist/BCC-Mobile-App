@@ -42,16 +42,16 @@
                 android:hint="Vehicle Height (cm)"
                 android:inputType="numberDecimal"
                 android:background="@drawable/MapStyles" />
-            <Button
+            <!--<Button
                 android:id="@+id/btnSwitch"
                 android:text=""
                 android:background="@drawable/layers"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_marginTop="111dp"
+                android:layout_marginTop="125dp"
                 android:layout_marginRight="8dp"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true" />
+                android:layout_alignParentTop="true" />-->
         </RelativeLayout>
     </fragment>
 </LinearLayout>

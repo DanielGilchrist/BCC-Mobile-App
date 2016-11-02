@@ -41,7 +41,7 @@ namespace BCC_Bridge.Android
         List<Bridge> bridges;
         List<Bridge> badBridges;
         private int mapIndex = 1;
-        private Button switchBtn;
+        //private Button switchBtn;
         private AutoCompleteTextView addressInput;
         private EditText vInput;
         private Marker marker = null;
@@ -82,8 +82,8 @@ namespace BCC_Bridge.Android
 
             TryGetLocation(); // check permissions
 
-            switchBtn = v.FindViewById<Button>(Resource.Id.btnSwitch);
-			switchBtn.Click += SwitchBtn_Click;
+            /*switchBtn = v.FindViewById<Button>(Resource.Id.btnSwitch);
+			switchBtn.Click += SwitchBtn_Click;*/
             
             addressInput = v.FindViewById<AutoCompleteTextView>(Resource.Id.addressInput);
             addressInput.SetTextColor(Color.ParseColor(textColor));
@@ -167,7 +167,7 @@ namespace BCC_Bridge.Android
         {
             mapViewModel.OnMapSetup(SetMyLocation, SetMyLocationMarker);
             gMap = googleMap;
-            gMap.SetPadding(0, 114, 0, 0);
+            gMap.SetPadding(0, 180, 0, 0); // so location button isn't in the way
             gMap.MyLocationEnabled = true;
             gMap.MyLocationChange += Map_MyLocationChange;
         }
@@ -210,7 +210,7 @@ namespace BCC_Bridge.Android
             }
         }
 
-        private void SwitchBtn_Click(object sender, EventArgs e)
+        /*private void SwitchBtn_Click(object sender, EventArgs e)
         {
             mapIndex++;
             if (mapIndex > 4)
@@ -218,7 +218,7 @@ namespace BCC_Bridge.Android
                 mapIndex = 1;
             }
             gMap.MapType = mapIndex;
-        }
+        }*/
 
         private void HideKeyboard(EditText editText)
         {

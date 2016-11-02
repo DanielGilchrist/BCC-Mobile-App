@@ -1893,8 +1893,8 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f0c0063
 			public const int SCROLLER_ID = 2131492963;
 			
-			// aapt resource value: 0x7f0c006e
-			public const int action0 = 2131492974;
+			// aapt resource value: 0x7f0c006d
+			public const int action0 = 2131492973;
 			
 			// aapt resource value: 0x7f0c0052
 			public const int action_bar = 2131492946;
@@ -1920,8 +1920,8 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f0c0053
 			public const int action_context_bar = 2131492947;
 			
-			// aapt resource value: 0x7f0c0072
-			public const int action_divider = 2131492978;
+			// aapt resource value: 0x7f0c0071
+			public const int action_divider = 2131492977;
 			
 			// aapt resource value: 0x7f0c0002
 			public const int action_menu_divider = 2131492866;
@@ -1968,20 +1968,17 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f0c002f
 			public const int bottom = 2131492911;
 			
-			// aapt resource value: 0x7f0c006d
-			public const int btnSwitch = 2131492973;
-			
 			// aapt resource value: 0x7f0c003b
 			public const int buttonPanel = 2131492923;
 			
-			// aapt resource value: 0x7f0c006f
-			public const int cancel_action = 2131492975;
+			// aapt resource value: 0x7f0c006e
+			public const int cancel_action = 2131492974;
 			
 			// aapt resource value: 0x7f0c0049
 			public const int checkbox = 2131492937;
 			
-			// aapt resource value: 0x7f0c0075
-			public const int chronometer = 2131492981;
+			// aapt resource value: 0x7f0c0074
+			public const int chronometer = 2131492980;
 			
 			// aapt resource value: 0x7f0c002b
 			public const int collapseActionView = 2131492907;
@@ -2019,8 +2016,8 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f0c0028
 			public const int end = 2131492904;
 			
-			// aapt resource value: 0x7f0c007a
-			public const int end_padder = 2131492986;
+			// aapt resource value: 0x7f0c0079
+			public const int end_padder = 2131492985;
 			
 			// aapt resource value: 0x7f0c0035
 			public const int expand_activities_button = 2131492917;
@@ -2052,17 +2049,17 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f0c0036
 			public const int image = 2131492918;
 			
-			// aapt resource value: 0x7f0c0079
-			public const int info = 2131492985;
+			// aapt resource value: 0x7f0c0078
+			public const int info = 2131492984;
 			
 			// aapt resource value: 0x7f0c0017
 			public const int light = 2131492887;
 			
-			// aapt resource value: 0x7f0c0073
-			public const int line1 = 2131492979;
+			// aapt resource value: 0x7f0c0072
+			public const int line1 = 2131492978;
 			
-			// aapt resource value: 0x7f0c0077
-			public const int line3 = 2131492983;
+			// aapt resource value: 0x7f0c0076
+			public const int line3 = 2131492982;
 			
 			// aapt resource value: 0x7f0c0018
 			public const int listMode = 2131492888;
@@ -2073,8 +2070,8 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f0c006a
 			public const int map = 2131492970;
 			
-			// aapt resource value: 0x7f0c0071
-			public const int media_actions = 2131492977;
+			// aapt resource value: 0x7f0c0070
+			public const int media_actions = 2131492976;
 			
 			// aapt resource value: 0x7f0c0029
 			public const int middle = 2131492905;
@@ -2181,8 +2178,8 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f0c0013
 			public const int standard = 2131492883;
 			
-			// aapt resource value: 0x7f0c0070
-			public const int status_bar_latest_event_content = 2131492976;
+			// aapt resource value: 0x7f0c006f
+			public const int status_bar_latest_event_content = 2131492975;
 			
 			// aapt resource value: 0x7f0c004c
 			public const int submenuarrow = 2131492940;
@@ -2196,11 +2193,11 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f0c000f
 			public const int terrain = 2131492879;
 			
-			// aapt resource value: 0x7f0c0078
-			public const int text = 2131492984;
+			// aapt resource value: 0x7f0c0077
+			public const int text = 2131492983;
 			
-			// aapt resource value: 0x7f0c0076
-			public const int text2 = 2131492982;
+			// aapt resource value: 0x7f0c0075
+			public const int text2 = 2131492981;
 			
 			// aapt resource value: 0x7f0c0044
 			public const int textSpacerNoButtons = 2131492932;
@@ -2211,8 +2208,8 @@ namespace BCC_Bridge.Android
 			// aapt resource value: 0x7f0c0062
 			public const int textView2 = 2131492962;
 			
-			// aapt resource value: 0x7f0c0074
-			public const int time = 2131492980;
+			// aapt resource value: 0x7f0c0073
+			public const int time = 2131492979;
 			
 			// aapt resource value: 0x7f0c003a
 			public const int title = 2131492922;
