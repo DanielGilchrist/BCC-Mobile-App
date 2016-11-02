@@ -179,8 +179,8 @@ namespace BCC_Bridge.Android
 
         private void HideKeyboard(EditText editText)
         {
-			//InputMethodManager imm = (InputMethodManager)GetSystemService(this.Activity.InputMethodService);
-   //         imm.HideSoftInputFromWindow(editText.WindowToken, 0);
+			InputMethodManager imm = (InputMethodManager)this.Activity.GetSystemService(global::Android.Content.Context.InputMethodService);
+            imm.HideSoftInputFromWindow(editText.WindowToken, 0);
         }
 
         private void SetMyLocation(GeoLocation geoLocation, float zoom = 18)
