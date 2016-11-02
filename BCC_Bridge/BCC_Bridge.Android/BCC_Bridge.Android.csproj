@@ -155,6 +155,7 @@
   <ItemGroup>
     <Compile Include="Maps\GeoCoder.cs" />
     <Compile Include="Maps\GoogleDirection.cs" />
+    <Compile Include="Maps\HereJSONParser.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Views\MapView.cs" />

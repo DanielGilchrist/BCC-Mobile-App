@@ -79,6 +79,7 @@ namespace BCC_Bridge.Android.Views
 
             bridgeService = new BridgeService();
             bridges = bridgeService.All();
+            badBridges = new List<Bridge>();
 
             SetUpMap();
         }
@@ -102,11 +103,6 @@ namespace BCC_Bridge.Android.Views
             gMap.MyLocationChange += Map_MyLocationChange;
 
             ThreadPool.QueueUserWorkItem(o => SetBridgeMarkers(bridges, vehicleHeight));
-            while (placingBridgeMarkers == true)
-            {
-                Thread.Sleep(1500);
-            }
-            ThreadPool.QueueUserWorkItem(o => ProcessRoute());
         }
 
         private void Map_MyLocationChange(object sender, GoogleMap.MyLocationChangeEventArgs e)
@@ -119,7 +115,11 @@ namespace BCC_Bridge.Android.Views
 
         private void Address_EditorAction(object sender, EventArgs e)
         {
-            SetCameraFromName(gMap, addressInput.Text);
+            var destCoords = GetCoordsFromName(addressInput.Text);
+            double destLat = destCoords[0].Latitude, destLong = destCoords[0].Longitude;
+
+            destination = new LatLng(destLat, destLong);
+            ProcessRoute();
 
             HideKeyboard(addressInput);
         }
@@ -139,7 +139,6 @@ namespace BCC_Bridge.Android.Views
                 else
                 {
                     ThreadPool.QueueUserWorkItem(o => SetBridgeMarkers(bridges, vehicleHeight));
-                    ThreadPool.QueueUserWorkItem(o => ProcessRoute());
                 }
             }
         }
@@ -246,7 +245,7 @@ namespace BCC_Bridge.Android.Views
             RunOnUiThread(() => Toast.MakeText(this, "Loading Bridge Markers...", ToastLength.Short).Show());
             placingBridgeMarkers = true;
 
-            badBridges = new List<Bridge>();
+            badBridges.Clear();
 
             MarkerType type;
             for (int i = 0; i < bridges.Count - 1; i++)
@@ -267,13 +266,17 @@ namespace BCC_Bridge.Android.Views
 
             placingBridgeMarkers = false;
             RunOnUiThread(() => Toast.MakeText(this, "Bridge Markers Loaded", ToastLength.Short).Show());
-            Console.WriteLine(string.Format("Bridges loaded!\n{0} bad bridges and {1} total bridges", badBridges.Count, bridges.Count));
+
+            if (destination != null)
+            {
+                RunOnUiThread(() => ProcessRoute());
+            }
         }
 
         public string MakeDirectionURL(double originLatitude, double originLongitude, double destLatitude, double destLongitude)
         {
             StringBuilder url = new StringBuilder();
-            url.Append("https://maps.googleapis.com/maps/api/directions/json");
+            /*url.Append("https://maps.googleapis.com/maps/api/directions/json");
             url.Append("?origin=");// from
             url.Append(originLatitude);
             url.Append(",");
@@ -283,46 +286,47 @@ namespace BCC_Bridge.Android.Views
             url.Append(",");
             url.Append(destLongitude);
             url.Append("&mode=driving&alternatives=true");
-            url.Append("&key=AIzaSyAtYVVEVhHpesj31u0VVRBjwUzC6Z25lms");
+            url.Append("&key=AIzaSyAtYVVEVhHpesj31u0VVRBjwUzC6Z25lms");*/
+
+            url.Append("http://route.cit.api.here.com/routing/7.2/calculateroute.json");
+            url.Append("?app_id=YueFlTt5s8iXeXb0VZPx");
+            url.Append("&app_code=sG2iAqVYSywf0KjhpK1drA");
+            url.AppendFormat("&waypoint0=geo!{0},{1}", originLatitude, originLongitude);
+            url.AppendFormat("&waypoint1=geo!{0},{1}", destLatitude, destLongitude);
+            url.Append("&mode=fastest;truck;traffic:disabled");
+            //url.Append("&avoidareas=");
+
+            Console.WriteLine(url.ToString());
 
             return url.ToString();
         }
 
         private void ProcessRoute()
         {
-            while (placingBridgeMarkers == true)
-            {
-                Thread.Sleep(1000);
-            }
-
-            Console.WriteLine("Number of bad bridges: " + badBridges.Count);
-
-            var oAddress = GetCoordsFromName("Bennett Street Brisbane");
-            var dAddress = GetCoordsFromName("Park Road Brisbane");
+            var oAddress = GetCoordsFromName("Queensland University of Technology");
+            //var oAddress = GetMyLocation();
+            var dAddress = destination;
 
             double oLat = oAddress[0].Latitude, oLong = oAddress[0].Longitude;
-            double dLat = dAddress[0].Latitude, dLong = dAddress[0].Longitude;
+            double dLat = dAddress.Latitude, dLong = dAddress.Longitude;
 
             origin = new LatLng(oLat, oLong);
             destination = new LatLng(dLat, dLong);
-
-            // SetCameraFromCoords(gMap, origin.Latitude, origin.Longitude);
-            RunOnUiThread(() => SetCameraFromCoords(gMap, origin.Latitude, origin.Longitude));
+            
+            SetCameraFromCoords(gMap, origin.Latitude, origin.Longitude);
 
             if (origin != null && destination != null)
             {
-                //DrawPath();
-                RunOnUiThread(() => DrawPath());
+                DrawRoute();
             }
         }
 
-        private async void DrawPath()
+        private async void DrawRoute()
         {
             string url = MakeDirectionURL(origin.Latitude, origin.Longitude, destination.Latitude, destination.Longitude);
             string DirectionJSONResponse = await DirectionHttpRequest(url);
 
             RunOnUiThread(() => {
-                //gMap.Clear();
                 SetMarker(MarkerType.Normal, "Origin", origin.Latitude, origin.Longitude, false);
                 SetMarker(MarkerType.Normal, "Destination", destination.Latitude, destination.Longitude, false);
             });
@@ -332,33 +336,43 @@ namespace BCC_Bridge.Android.Views
 
         private void SetDirectionQuery(string response)
         {
-            var routesObject = JsonConvert.DeserializeObject<GoogleDirection>(response);
+            var routesObject = JsonConvert.DeserializeObject<HereJSONResponse>(response).response;
            
-            if (routesObject.routes.Count > 0)
+            if (routesObject.route.Count > 0)
             {
-                var routes = routesObject.routes;
-                Console.WriteLine("Number of routes: " + routes.Count);
+                var routes = routesObject.route;
+
+                bool isOkay = false;
+               /* Console.WriteLine("Number of routes: " + routes.Count);
 
                 int routeIndex = 0;
+                bool isOkay = false;
                 while (routeIndex < routes.Count)
                 {
-
-                    bool isOkay = false;
-                    var legs = routes[routeIndex].legs;
+                    
+                    var legs = routes[routeIndex].leg;
                     for (int i = 0; i < legs.Count; i++)
                     {
                         double startLat = legs[i].start_location.lat, startLong = legs[i].start_location.lng;
                         double endLat = legs[i].end_location.lat, endLong = legs[i].end_location.lng;
 
                         var boundBuilder = new LatLngBounds.Builder();
-                        boundBuilder.Include(new LatLng(startLat, startLong));
-                        boundBuilder.Include(new LatLng(endLat, endLong));
+                        boundBuilder.Include(new LatLng(routes[routeIndex].bounds.northeast.lat, 
+                                                        routes[routeIndex].bounds.northeast.lng));
+                        boundBuilder.Include(new LatLng(routes[routeIndex].bounds.southwest.lat,
+                                                        routes[routeIndex].bounds.southwest.lng));
 
-                        var bound = boundBuilder.Build();
+                        //var bound = boundBuilder.Build();
 
                         foreach(var location in badBridges)
                         {
                             if (!(bound.Contains(new LatLng(location.Latitude, location.Longitude))))
+                            {
+                                isOkay = true;
+                            }
+
+                            // check if bridge is on leg or route
+                            if(Math.Abs((endLat - startLat) * (location.Longitude - startLong) - (endLong - startLong) * (location.Latitude - startLat)) < 1)
                             {
                                 isOkay = true;
                             }
@@ -367,32 +381,54 @@ namespace BCC_Bridge.Android.Views
 
                     if (isOkay == true)
                     {
+                        Console.WriteLine("Broke from loop with routeIndex = " + routeIndex);
                         break;
                     }
 
                     routeIndex++;
-                }
+                }*/
 
-                Console.WriteLine("Route Index: " + routeIndex);
-
-                string encodedPoints = routes[routeIndex].overview_polyline.points;
-                var decodedPoints = DecodePolyPoints(encodedPoints);
-
-                var points = new LatLng[decodedPoints.Count];
-                int index = 0;
-                foreach(LatLng location in decodedPoints)
+                /*if (routeIndex >= routes.Count)
                 {
-                    points[index++] = new LatLng(location.Latitude, location.Longitude);
+                    routeIndex--;
                 }
 
-                var polyOption = new PolylineOptions();
-                polyOption.InvokeColor(Color.Red);
-                polyOption.InvokeWidth(5);
-                polyOption.Geodesic(true);
-                polyOption.Visible(true);
-                polyOption.Add(points);
+                Console.WriteLine("Route Index: " + routeIndex); */
 
-                RunOnUiThread(() => gMap.AddPolyline(polyOption));
+                if (isOkay == true)
+                {
+                    Toast.MakeText(this, "Unable to find acceptable route", ToastLength.Long).Show();
+                }
+                else
+                {
+                    //string encodedPoints = routes[0].overview_polyline.points;
+                    //var decodedPoints = DecodePolyPoints(encodedPoints);
+
+                    var points = new LatLng[routes[0].waypoint.Count];
+
+
+                    for (int i = 0; i < routes[0].waypoint.Count; i++)
+                    {
+                        points[i] = new LatLng(routes[0].waypoint[i].mappedPosition.latitude, routes[0].waypoint[i].mappedPosition.latitude);
+                    }
+
+                    /*int index = 0;
+                    foreach (LatLng location in decodedPoints)
+                    {
+                        points[index++] = new LatLng(location.Latitude, location.Longitude);
+                    }*/
+
+                    var polyOption = new PolylineOptions();
+                    polyOption.InvokeColor(Color.Red);
+                    polyOption.InvokeWidth(5);
+                    polyOption.Geodesic(true);
+                    polyOption.Visible(true);
+                    polyOption.Add(points);
+
+                    RunOnUiThread(() => gMap.AddPolyline(polyOption));
+                }
+
+                
             }
             else
             {
@@ -472,7 +508,8 @@ namespace BCC_Bridge.Android.Views
             }
             catch (Exception e)
             {
-                result = e.ToString();
+                Toast.MakeText(this, "Unable to draw route. Please try again.", ToastLength.Short);
+                result = "";
             }
             finally
             {
