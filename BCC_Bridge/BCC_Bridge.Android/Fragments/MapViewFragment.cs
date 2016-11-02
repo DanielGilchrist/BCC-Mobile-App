@@ -25,12 +25,13 @@ using BCC_Bridge.Android.Maps;
 using MvvmCross.Binding.Droid.BindingContext;
 using Android;
 using Android.Content.PM;
+using Android.Support.V4.App;
 
 namespace BCC_Bridge.Android
 {
 	[MvxFragmentAttribute(typeof(MainViewModel), Resource.Id.frameLayout)]
 	[Register("bcc_bridge.android.MapViewFragment")]
-	public class MapViewFragment : MvxFragment<MapViewModel>, IOnMapReadyCallback
+	public class MapViewFragment : MvxFragment<MapViewModel>, IOnMapReadyCallback, ActivityCompat.IOnRequestPermissionsResultCallback
 	{
         private delegate IOnMapReadyCallback OnMapReadyCallback();
         private GoogleMap gMap;
@@ -72,7 +73,7 @@ namespace BCC_Bridge.Android
 
             TryGetLocation(); // check permissions
 
-			switchBtn = v.FindViewById<Button>(Resource.Id.btnSwitch);
+            switchBtn = v.FindViewById<Button>(Resource.Id.btnSwitch);
 			switchBtn.Click += SwitchBtn_Click;
 
             addressInput = v.FindViewById<EditText>(Resource.Id.addressInput);
@@ -94,10 +95,6 @@ namespace BCC_Bridge.Android
             if (permissionsGranted != false)
             {
                 SetUpMap();
-            }
-            else
-            {
-                var snack = Toast.MakeText(this.Activity, "Location permission is denied. Please enable to use the app.", ToastLength.Long);
             }
 
             // OnCreateView must return the View
@@ -134,8 +131,6 @@ namespace BCC_Bridge.Android
             gMap.SetPadding(0, 114, 0, 0);
             gMap.MyLocationEnabled = true;
             gMap.MyLocationChange += Map_MyLocationChange;
-
-            ThreadPool.QueueUserWorkItem(o => SetBridgeMarkers(bridges, vehicleHeight));
         }
 
         private void Map_MyLocationChange(object sender, GoogleMap.MyLocationChangeEventArgs e)
@@ -152,7 +147,7 @@ namespace BCC_Bridge.Android
             double destLat = destCoords[0].Latitude, destLong = destCoords[0].Longitude;
 
             destination = new LatLng(destLat, destLong);
-            ProcessRoute();
+            ThreadPool.QueueUserWorkItem(o => SetBridgeMarkers(bridges, vehicleHeight));
 
             HideKeyboard(addressInput);
         }
@@ -163,7 +158,6 @@ namespace BCC_Bridge.Android
 
             if (vInput.Text != "")
             {
-                vehicleHeight = double.Parse(vInput.Text);
 
                 if (placingBridgeMarkers == true)
                 {
@@ -171,7 +165,8 @@ namespace BCC_Bridge.Android
                 }
                 else
                 {
-                    ThreadPool.QueueUserWorkItem(o => SetBridgeMarkers(bridges, vehicleHeight));
+                    vehicleHeight = double.Parse(vInput.Text);
+                    Toast.MakeText(this.Activity, "Vehicle height set. Enter a location to plan a route.", ToastLength.Long).Show();
                 }
             }
         }
@@ -270,6 +265,7 @@ namespace BCC_Bridge.Android
 
             marker = gMap.AddMarker(markerOptions);
         }
+
 
         private void SetBridgeMarkers(List<Bridge> bridges, double height)
         {
@@ -402,6 +398,7 @@ namespace BCC_Bridge.Android
                 polyOption.InvokeWidth(5);
                 polyOption.Add(points);
 
+                this.Activity.RunOnUiThread(() => Toast.MakeText(this.Activity, "Route Calculated", ToastLength.Short).Show());
                 this.Activity.RunOnUiThread(() => gMap.AddPolyline(polyOption));
             }
             else
@@ -461,7 +458,7 @@ namespace BCC_Bridge.Android
             RequestPermissions(PermissionsLocation, RequestLocationId);
         }
 
-        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
+        public void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
         {
             switch (requestCode)
             {
@@ -471,7 +468,7 @@ namespace BCC_Bridge.Android
                         {
                             //Permission granted
                             var snack = Toast.MakeText(this.Activity, "Permission granted", ToastLength.Long);
-                            permissionsGranted = true;
+                            this.Activity.Recreate();
                         }
                         else
                         {
@@ -483,5 +480,7 @@ namespace BCC_Bridge.Android
                     break;
             }
         }
+
+        
     }
 }
