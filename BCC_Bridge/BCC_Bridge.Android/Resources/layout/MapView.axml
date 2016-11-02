@@ -27,7 +27,7 @@
                 android:ellipsize="start"
                 android:hint="Enter Location"
                 android:inputType="textCapSentences|textAutoCorrect"
-                android:imeOptions="actionSearch"
+                android:imeOptions="actionNone"
                 android:singleLine="true"
                 android:background="@drawable/MapStyles" />-->
             <EditText

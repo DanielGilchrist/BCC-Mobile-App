@@ -182,25 +182,14 @@ namespace BCC_Bridge.Android
 
         private void AutoCompleteOption_Click(object sender, AdapterView.ItemClickEventArgs e)
         {
-            // hide keyboard for autocomplete
-            InputMethodManager inputManager = (InputMethodManager)this.Activity.GetSystemService(global::Android.Content.Context.InputMethodService);
-            inputManager.HideSoftInputFromWindow(addressInput.WindowToken, HideSoftInputFlags.NotAlways);
-
-            if (addressInput.Text != string.Empty)
-            {
-                var destCoords = GetCoordsFromName(addressInput.Text);
-                double destLat = destCoords[0].Latitude, destLong = destCoords[0].Longitude;
-
-                destination = new LatLng(destLat, destLong);
-                ThreadPool.QueueUserWorkItem(o => SetBridgeMarkers(bridges, vehicleHeight));
-            }
-
+            CalculateRoute();
         }
 
         private void AddressInput_Click(object sender, EventArgs e)
         {
             addressInput.Text = "";
         }
+
 
         private void VehicleInput_EditorAction(object sender, EventArgs e)
         {
@@ -235,6 +224,22 @@ namespace BCC_Bridge.Android
         {
 			InputMethodManager imm = (InputMethodManager)this.Activity.GetSystemService(global::Android.Content.Context.InputMethodService);
             imm.HideSoftInputFromWindow(editText.WindowToken, 0);
+        }
+
+        private void CalculateRoute()
+        {
+            // hide keyboard for autocomplete
+            InputMethodManager inputManager = (InputMethodManager)this.Activity.GetSystemService(global::Android.Content.Context.InputMethodService);
+            inputManager.HideSoftInputFromWindow(addressInput.WindowToken, HideSoftInputFlags.NotAlways);
+
+            if (addressInput.Text != string.Empty)
+            {
+                var destCoords = GetCoordsFromName(addressInput.Text);
+                double destLat = destCoords[0].Latitude, destLong = destCoords[0].Longitude;
+
+                destination = new LatLng(destLat, destLong);
+                ThreadPool.QueueUserWorkItem(o => SetBridgeMarkers(bridges, vehicleHeight));
+            }
         }
 
         private void SetMyLocation(GeoLocation geoLocation, float zoom = 18)
