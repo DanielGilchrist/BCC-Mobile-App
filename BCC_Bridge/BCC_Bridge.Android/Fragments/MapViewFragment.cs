@@ -23,7 +23,8 @@ using Newtonsoft.Json;
 using System.Text;
 using BCC_Bridge.Android.Maps;
 using MvvmCross.Binding.Droid.BindingContext;
-
+using Android;
+using Android.Content.PM;
 
 namespace BCC_Bridge.Android
 {
@@ -48,6 +49,9 @@ namespace BCC_Bridge.Android
         WebClient webclient;
         LatLng origin;
         LatLng destination;
+        readonly string[] PermissionsLocation = { Manifest.Permission.AccessCoarseLocation, Manifest.Permission.AccessFineLocation };
+        const int RequestLocationId = 0;
+        bool permissionsGranted = false;
 
         enum MarkerType
         {
@@ -65,6 +69,8 @@ namespace BCC_Bridge.Android
 			// Maybe initialise all of this somewhere else? not sure if it will cause hangs as
 			// the fragment will wait until OnCreateView has returned a View.
 			string textColor = "#474342", hintColor = "#a99c98";
+
+            TryGetLocation(); // check permissions
 
 			switchBtn = v.FindViewById<Button>(Resource.Id.btnSwitch);
 			switchBtn.Click += SwitchBtn_Click;
@@ -85,7 +91,14 @@ namespace BCC_Bridge.Android
             bridges = bridgeService.All();
             badBridges = new List<Bridge>();
 
-            SetUpMap();
+            if (permissionsGranted != false)
+            {
+                SetUpMap();
+            }
+            else
+            {
+                var snack = Toast.MakeText(this.Activity, "Location permission is denied. Please enable to use the app.", ToastLength.Long);
+            }
 
             // OnCreateView must return the View
             return v;
@@ -422,6 +435,53 @@ namespace BCC_Bridge.Android
             }
 
             return result;
+        }
+
+        private void TryGetLocation()
+        {
+            if ((int)Build.VERSION.SdkInt < 23)
+            {
+                permissionsGranted = true;
+                return;
+            }
+
+            GetLocationPermission();
+        }
+
+        private void GetLocationPermission()
+        {
+            const string permission = Manifest.Permission.AccessFineLocation;
+            if (this.Activity.CheckSelfPermission(permission) == (int)Permission.Granted)
+            {
+                permissionsGranted = true;
+                return;
+            }
+
+            // request permissions with the list of permissions and Id
+            RequestPermissions(PermissionsLocation, RequestLocationId);
+        }
+
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
+        {
+            switch (requestCode)
+            {
+                case RequestLocationId:
+                    {
+                        if (grantResults[0] == Permission.Granted)
+                        {
+                            //Permission granted
+                            var snack = Toast.MakeText(this.Activity, "Permission granted", ToastLength.Long);
+                            permissionsGranted = true;
+                        }
+                        else
+                        {
+                            //Permission Denied :(
+                            //Disabling location functionality
+                            var snack = Toast.MakeText(this.Activity, "Location permission is denied. Please enable to use the app.", ToastLength.Long);
+                        }
+                    }
+                    break;
+            }
         }
     }
 }
