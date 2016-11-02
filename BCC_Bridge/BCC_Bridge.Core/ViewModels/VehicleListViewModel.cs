@@ -11,16 +11,13 @@ namespace BCC_Bridge.Core.ViewModels
         public VehicleListViewModel(IVehicleService collectionService)
         {
             _collectionService = collectionService;
-			var veh = new Vehicle() { Name = "test" };
-            _collectionService.Add(veh);
             this.Vehicles = _collectionService.All();
-
-			foreach (Vehicle vehicle in this.Vehicles)
-			{
-				Debug.WriteLine(vehicle);
-			}
-
         }
+
+		public void Refresh()
+		{
+			this.Vehicles = _collectionService.All();
+		}
 
         private List<Vehicle> _vehicles;
         public List<Vehicle> Vehicles
@@ -29,22 +26,19 @@ namespace BCC_Bridge.Core.ViewModels
             set { _vehicles = value; RaisePropertyChanged(() => Vehicles); }
         }
 
-
-
-
-        private MvvmCross.Core.ViewModels.MvxCommand<Vehicle> _itemSelectedCommand;
+        private MvxCommand<Vehicle> _itemSelectedCommand;
         public System.Windows.Input.ICommand ItemSelectedCommand
         {
             get
             {
-                _itemSelectedCommand = _itemSelectedCommand ?? new MvvmCross.Core.ViewModels.MvxCommand<Vehicle>(DoSelectItem);
+                _itemSelectedCommand = _itemSelectedCommand ?? new MvxCommand<Vehicle>(DoSelectItem);
                 return _itemSelectedCommand;
             }
         }
 
         private void DoSelectItem(Vehicle vehicle)
         {
-            //Console.WriteLine(vehicle);
+			ShowViewModel<AddVehicleViewModel>(new AddVehicleParameters() { id = vehicle.Id - 1, editMode = true });
         }
     }
 }

@@ -4,5 +4,5 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    local:MvxBind="ItemsSource Vehicles"
+    local:MvxBind="ItemsSource Vehicles; ItemClick ItemSelectedCommand"
     local:MvxItemTemplate="@layout/listitem_vehicle" />

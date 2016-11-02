@@ -9,12 +9,11 @@ namespace BCC_Bridge.Core.ViewModels
 		readonly Type[] _menuItemTypes = {
 			typeof(MapViewModel),
 			typeof(VehicleListViewModel),
+			typeof(AddVehicleViewModel),
 			typeof(HelpAboutViewModel),
 		};
 
-		public IEnumerable<string> MenuItems { get; private set; } = new[] {"Map", "Vehicles", "Help / About" };
-
-
+		public IEnumerable<string> MenuItems { get; private set; } = new[] {"Map", "Vehicles", "Add vehicle", "Help / About" };
 
 		public void ShowDefaultMenuItem()
 		{
@@ -25,6 +24,12 @@ namespace BCC_Bridge.Core.ViewModels
 		{
 			ShowViewModel(_menuItemTypes[position]);
 		}
+	}
+
+	public class AddVehicleParameters
+	{
+		public int id { get; set; }
+		public bool editMode { get; set; }
 	}
 
 	public class MenuItem : Tuple<string, Type>

@@ -160,7 +160,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Setup.cs" />
     <Compile Include="Bootstrap\SqlitePluginBootstrap.cs" />
-    <Compile Include="Views\AddVehicleView.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Fragments\MapViewFragment.cs" />
     <Compile Include="Fragments\VehicleListFragment.cs" />
@@ -168,6 +167,7 @@
     <Compile Include="DebugTrace.cs" />
     <Compile Include="LinkerPleaseInclude.cs" />
     <Compile Include="Fragments\HelpAboutFragment.cs" />
+    <Compile Include="Fragments\AddVehicleFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

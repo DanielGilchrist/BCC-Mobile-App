@@ -28,6 +28,13 @@ namespace MvxSqlite.Services
                 .ToList();
         }
 
+		public Vehicle ById(int id)
+		{
+			return _connection
+				.Table<Vehicle>()
+				.ElementAt(id);
+		}
+
         public void Add(Vehicle vehicle)
         {
 			Debug.WriteLine("VehicleService.Add()");
