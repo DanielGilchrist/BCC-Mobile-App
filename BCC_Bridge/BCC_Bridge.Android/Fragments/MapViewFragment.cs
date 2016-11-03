@@ -402,34 +402,51 @@ namespace BCC_Bridge.Android
 
         private void ProcessRoute()
         {
-            var oAddress = GetMyLocation();
-            var dAddress = destination;
-
-            double oLat = oAddress.Latitude, oLong = oAddress.Longitude;
-            double dLat = dAddress.Latitude, dLong = dAddress.Longitude;
-
-            origin = new LatLng(oLat, oLong);
-            destination = new LatLng(dLat, dLong);
-
-            SetCameraFromCoords(gMap, origin.Latitude, origin.Longitude);
-
-            if (origin != null && destination != null)
+            try
             {
-                DrawRoute();
+                var oAddress = GetMyLocation();
+
+                var dAddress = destination;
+
+                double oLat = oAddress.Latitude, oLong = oAddress.Longitude;
+                double dLat = dAddress.Latitude, dLong = dAddress.Longitude;
+
+                origin = new LatLng(oLat, oLong);
+                destination = new LatLng(dLat, dLong);
+
+                SetCameraFromCoords(gMap, origin.Latitude, origin.Longitude);
+
+                if (origin != null && destination != null)
+                {
+                    DrawRoute();
+                }
             }
+            catch
+            {
+                Toast.MakeText(this.Activity, "Unable to process the route.", ToastLength.Long);
+            }
+            
         }
 
         private async void DrawRoute()
         {
-            string url = MakeDirectionURL(origin.Latitude, origin.Longitude, destination.Latitude, destination.Longitude);
-            string DirectionJSONResponse = await DirectionHttpRequest(url);
+            try
+            {
+                string url = MakeDirectionURL(origin.Latitude, origin.Longitude, destination.Latitude, destination.Longitude);
+                string DirectionJSONResponse = await DirectionHttpRequest(url);
 
-            this.Activity.RunOnUiThread(() => {
-                SetMarker(MarkerType.Normal, "Origin", origin.Latitude, origin.Longitude, false);
-                SetMarker(MarkerType.Normal, "Destination", destination.Latitude, destination.Longitude, false);
-            });
+                this.Activity.RunOnUiThread(() => {
+                    SetMarker(MarkerType.Normal, "Origin", origin.Latitude, origin.Longitude, false);
+                    SetMarker(MarkerType.Normal, "Destination", destination.Latitude, destination.Longitude, false);
+                });
 
-            SetDirectionQuery(DirectionJSONResponse);
+                SetDirectionQuery(DirectionJSONResponse);
+            }
+            catch
+            {
+                Toast.MakeText(this.Activity, "Unable to draw the route", ToastLength.Long);
+            }
+            
         }
 
         private void SetDirectionQuery(string response)
@@ -466,7 +483,7 @@ namespace BCC_Bridge.Android
         {
             webclient = new WebClient();
 
-            string result;
+            string result = "";
 
             try
             {
